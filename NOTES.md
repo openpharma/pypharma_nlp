@@ -2,17 +2,10 @@
 
 ## Datasets
 
-- For classification
-    - See BioASQ Task A below.
+## Available
 
-- For NER
-    - BC5CDR, see below.
+- Datasets used in BioBERT paper
 
-- For relation extraction:
-    - CHEMPROT, see below.
-
-
-- Datasets in BioBERT
     - BioASQ: 
        - Link: http://bioasq.org/
        - Three sub-tasks:
@@ -36,4 +29,15 @@
         - For NLI there is a simple to use baseline: https://github.com/jgc128/mednli_baseline.
         - The CHiQA system does not appear to be open source.
 - BioCaddie
-- Datasets in Peng "Transfer Learning..." (seems to outperform BioBert)
+- Datasets used in Peng "Transfer Learning..." (seems to outperform BioBert)
+
+### Selected Datasets for Workshop
+
+- For classification
+    - See BioASQ Task A above.
+
+- For NER
+    - BC5CDR, see above.
+
+- For relation extraction:
+    - CHEMPROT, see above.
