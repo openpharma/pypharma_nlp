@@ -5,6 +5,9 @@
 ### Available
 
 - Datasets used in BioBERT paper
+    - Paper link: https://arxiv.org/pdf/1901.08746.pdf
+    - Code link: https://github.com/dmis-lab/biobert
+    - Notes: The code seems to have instructions to download the data.
     - BioASQ: 
         - Link: http://bioasq.org/
         - Paper link: https://www.ncbi.nlm.nih.gov/pubmed/?term=An+overview+of+the+BIOASQ+large-scale+biomedical+semantic+indexing+and+question+answering+competition
@@ -41,9 +44,15 @@
         - For NLI there is a simple to use baseline: https://github.com/jgc128/mednli_baseline.
         - The CHiQA system does not appear to be open source.
 - BioCaddie
-- Datasets used in Peng "Transfer Learning..." (seems to outperform BioBert)
+- Datasets used in NCBI_BERT (seems to outperform BioBert)
     
-    - Code link: https://github.com/ncbi-nlp/BLUE_Benchmark
+    - Paper link: https://arxiv.org/pdf/1906.05474.pdf
+    - Code link (training)https://github.com/ncbi-nlp/NCBI_BERT
+    - Code link (benchmark): https://github.com/ncbi-nlp/BLUE_Benchmark
+    - Notes: 
+        - It seems to be a modified version of the original BERT. 
+        - It has scripts to run the training and prediction tasks (in the scripts folder).
+        - It seems to have BioBERT checkpoints included, however their reported scores differ from the ones in the original paper.
     
     - BIOSSES: 
         - Link: http://tabilab.cmpe.boun.edu.tr/BIOSSES/DataSet.html
