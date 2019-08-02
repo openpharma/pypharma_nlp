@@ -14,7 +14,10 @@
         - Three sub-tasks:
         - Task A: Predict MeSH headings/subheadings (?) for new publications.
         - Task B: Provide answers with both relevant concepts, articles, snippets, rdf triples from designated resources, as well as exact and "ideal" answers.
-            - Link (with downloads): http://participants-area.bioasq.org/general_information/Task7b/
+            - Link (with info and downloads): http://participants-area.bioasq.org/general_information/Task7b/
+            - Link (with info and downloads): http://participants-area.bioasq.org/Tasks/A/getData/
+            - Training data link (4b): http://participants-area.bioasq.org/Tasks/4b/trainingDataset/
+            - Test data link: http://participants-area.bioasq.org/Tasks/b/testData/
         - Task C: Classify IBECS and LILACS documents (similar to Task A but in spanish).
 
     - BioCreative BC5CDR and ChemProt:
