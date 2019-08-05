@@ -2,7 +2,7 @@
 
 ## Agenda
 
-- Introduction: Why Biomedical NLP? (30 mins)
+- Introduction to Biomedical NLP (30 mins)
 - Understanding Natural Language: Language Models (45 mins)
 - Categorizing Documents: Document Classification, Automated Tagging (30 mins)
 - Coffee Break (15 mins)
