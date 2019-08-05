@@ -9,3 +9,4 @@
 - Extracting Information I: Named Entity Recognition (30 mins)
 - Extracting Information II: Relation Extraction (30 mins)
 - The Ultimate Challenge: Question Answering (45 mins)
+- Concluding Ideas and Q&A (15 mins)
