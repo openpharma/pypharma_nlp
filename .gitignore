@@ -1,1 +1,4 @@
 slides.pdf
+/notebooks/.ipynb_checkpoints/
+/venv/
+jupyterhub*
