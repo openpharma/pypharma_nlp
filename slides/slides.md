@@ -24,7 +24,7 @@
   websites.
 
 \begin{figure}
-    \includegraphics[width=0.7\textwidth,height=0.5\textheight]{figures/wikipedia_timeline.png}
+    \includegraphics[height=0.5\textheight]{figures/wikipedia_timeline.png}
 \end{figure}
 
 
@@ -46,6 +46,16 @@
 
 - Machines and humans have different strengths and weaknesses when processing 
   text.
+
+\begin{figure}
+    \includegraphics[height=0.7\textheight]{figures/ade_corpus_iaa.png}
+\end{figure}
+
+
+## Humans vs. Machines (2/2)
+
+- Machines and humans have different strengths and weaknesses when processing 
+  text.
 - Machines in particular are capable of processing vast amounts of text in a 
   very short period of time in a very consistent way and performing simple 
   tasks.
@@ -53,7 +63,7 @@
   however they are capable of much more complex reasoning and understanding.
 
 
-## Humans vs. Machines (2/2)
+## Humans vs. Machines (3/2)
 
 What are some examples of tasks can computers perform well in 2019?
 
@@ -65,6 +75,11 @@ What are some examples of tasks can computers perform well in 2019?
   PubMed abstracts)
 - Answering simple questions based on a small amount of context (e.g. 
   "Which drug should be used as an antidote in benzodiazepine overdose?")
+
+
+## References
+
+WIP.
 
 
 # Backup
@@ -89,7 +104,6 @@ What are some examples of tasks can computers perform well in 2019?
 \begin{figure}
     \includegraphics[width=0.7\textwidth]{figures/num_publications_year_combined.pdf}
 \end{figure}
-
 
 
 ## Agenda
