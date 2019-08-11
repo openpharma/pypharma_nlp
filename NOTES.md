@@ -86,3 +86,21 @@
 
 - For question answering:
     - BioASQ Task B
+
+## Methods
+
+- Transformers
+    - Video lecture by Vaswani (Transformers and Music Transformers): 
+    https://www.youtube.com/watch?v=5vcj8kSwBCY&feature=youtu.be&t=2209
+        - Constant path length between two positions.
+        - Unbounded memory.
+        - Trivial to paralellize.
+        - Models Self-Similarity.
+        - Relative attention and its effect on Music Transformers and Image 
+          Transformers.
+        - Non-autoregressive generation! (instead of word by word, decisions 
+          made in a latent space, or iterative refinement, etc).
+        - Transfer Learning BERT, etc, mesh tensorflow (larger models).
+        - Other work: Universal Transformers (recurrence in depth), 
+          Transformer XL (recurrence + self-attention, beyond fixed length 
+          context), etc.
