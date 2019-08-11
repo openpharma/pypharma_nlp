@@ -2,18 +2,43 @@
 % Diego Saldana
 % November 2019
 
-# Motivation, Objectives, and Agenda
+
+# Introduction to Biomedical NLP
 
 
-## Motivation
+## Why Biomedical NLP?
 
-Something
+- Most of the information out there is in the form of natural language: 
+  scientific papers, clinical notes, social media, textbooks, lectures, 
+  websites.
+
+\begin{figure}
+    \includegraphics[width=0.7\textwidth]{figures/num_publications_year.pdf}
+\end{figure}
 
 
-## Objectives
+## Why Biomedical NLP?
 
-* First
-* Second
+- Most of the information out there is in the form of natural language: 
+  scientific papers, clinical notes, social media, textbooks, lectures, 
+  websites.
+
+\begin{figure}
+    \includegraphics[width=0.7\textwidth,height=0.5\textheight]{figures/wikipedia_timeline.png}
+\end{figure}
+
+
+## Why Biomedical NLP?
+
+- Most of the information out there is in the form of natural language: 
+  scientific papers, clinical notes, social media, textbooks, lectures, 
+  websites.
+- This information is potentially very useful but cannot readily be used 
+  programmatically and be stored in databases, searched, or analyzed.
+- As a result this valuable information is "locked into a vault" until a human 
+  reads it, structures it and puts it into some database.
+- And even when that happens, the scope in which the data can be used is 
+  usually limited and chosen by the extractors.
 
 
 ## Agenda
