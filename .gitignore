@@ -1,3 +1,5 @@
 /notebooks/.ipynb_checkpoints/
 /venv/
 jupyterhub*
+__pycache__
+*egg-info
