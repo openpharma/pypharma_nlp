@@ -18,7 +18,6 @@ def _set_entrez_email():
 
 def publications_per_year(query=None, years=None, silent=False):
     
-    
     # Setup
     _set_entrez_email()
     if years == None:
