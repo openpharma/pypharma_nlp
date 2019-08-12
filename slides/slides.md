@@ -77,6 +77,11 @@ What are some examples of tasks can computers perform well in 2019?
   "Which drug should be used as an antidote in benzodiazepine overdose?")
 
 
+## Some Common Tasks
+
+- Language Modelling: Given a set of tokens $t_{1}$ predict.
+
+
 ## References
 
 WIP.
