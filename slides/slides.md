@@ -79,7 +79,16 @@ What are some examples of tasks can computers perform well in 2019?
 
 ## Some Common Tasks
 
-- Language Modelling: Given a set of tokens $t_{1}$ predict.
+Language Modelling: A language model assigns probabilities to sequences of 
+tokens, where tokens $t$ can be words, characters, sub-words, etc: 
+
+$P\Big(t_{1}, t_{2}, t_{3}, ..., t_{N}\Big)$.
+
+One common way to do this is to decompose this as the probability of the next 
+token in the sequence $t_{i}$ given the probability of the sequence up to the 
+previous token and some parameters $\Theta$ for our model:
+
+$P\Big(t_{i} | t_{1}, t_{2}, t_{3}, ..., t_{i - 1}, \Theta\Big).$
 
 
 ## References
