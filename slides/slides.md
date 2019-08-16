@@ -84,11 +84,15 @@ tokens, where tokens $t$ can be words, characters, sub-words, etc:
 
 $P\Big(t_{1}, t_{2}, t_{3}, ..., t_{N}\Big)$.
 
-One common way to do this is to decompose this as the probability of the next 
-token in the sequence $t_{i}$ given the probability of the sequence up to the 
-previous token and some parameters $\Theta$ for our model:
+Take four sentences:
 
-$P\Big(t_{i} | t_{1}, t_{2}, t_{3}, ..., t_{i - 1}, \Theta\Big).$
+- ``The dog ran after the cat.''
+- ``The dog ran after the tiger.''
+- ``The stone ran after the tiger.''
+- ``Tiger stone the after ran.''
+
+Clearly, each subsequent sentence is less probable than the next. A good 
+language model should assign probabilities to this sentences that reflect this.
 
 
 ## References
