@@ -12,7 +12,7 @@
         - Named Entity Recognition
         - Relation Extraction
         - Question Answering
-    - How: A brief history of NLP
+    - How: A Very Brief History of Language Models
         - Bags of words
         - LSI and LDA
         - Deep Learning

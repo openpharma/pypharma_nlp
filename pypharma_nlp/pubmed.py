@@ -61,7 +61,7 @@ def plot_publications_per_year(years, counts, about=None,
     else:
         title = "Number of publications* about %s in PubMed per year" % about 
     footnote = "*According to the year of the 'Date - Publication' " + \
-        "field of Entrez"
+        "field of PubMed"
     if extra_footnote != None:
         footnote += "\n" + extra_footnote
     plt.title(title)

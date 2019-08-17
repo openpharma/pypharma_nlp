@@ -1,5 +1,10 @@
 #!/bin/bash
 set -e
 
-cd slides
-pandoc -t beamer slides.md -V theme:metropolis -o ../slides.pdf
+pandoc \
+    -t beamer slides/slides.md \
+    -V theme:metropolis \
+    --filter pandoc-citeproc \
+    --bibliography slides/bibliography.bib \
+    --csl slides/acm-sigchi-proceedings.csl \
+    -o slides.pdf

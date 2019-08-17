@@ -3,3 +3,4 @@
 jupyterhub*
 __pycache__
 *egg-info
+slides.log
