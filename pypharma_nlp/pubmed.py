@@ -1,6 +1,9 @@
 from Bio import Entrez
+from Bio import Medline
 import matplotlib.pyplot as plt
+import nltk
 import os
+import pandas as pd
 import time
 
 
@@ -16,10 +19,14 @@ def _set_entrez_email():
             Entrez.email = os.environ["ENTREZ_EMAIL"]
 
 
+_set_entrez_email()
+
+
 def publications_per_year(query=None, years=None, silent=False):
     
-    # Setup
-    _set_entrez_email()
+    """Get the number of publications in PubMed per year. Optionally given a 
+    query."""
+    
     if years == None:
         years = range(1970, 2019)
     counts = []
@@ -56,6 +63,10 @@ def publications_per_year(query=None, years=None, silent=False):
 
 def plot_publications_per_year(years, counts, about=None, 
     extra_footnote=None, output_path=None):
+
+    """Plots a curve of publications per year as returned by 
+    'get_publications_per_year'."""
+    
     if about == None:
         title = "Number of publications* in PubMed per year"
     else:
@@ -72,3 +83,82 @@ def plot_publications_per_year(years, counts, about=None,
         plt.show()
     else:
         plt.savefig(output_path)
+
+
+def get_search_results(query, max_results=None):
+    
+    """Get a list of PubMed results (PubMed IDs) for a query."""
+    
+    handle = Entrez.esearch(db="pubmed", term=query, retmax=max_results)
+    time.sleep(1)
+    search_results = Entrez.read(handle)
+    pmids = search_results["IdList"]
+    return pmids
+
+
+def get_publications(query=None, pmids=None, max_results=None):
+    
+    """Get PubMed publications records for a query or list of ids."""
+
+    # Get search results
+    if query == None and pmids == None:
+        raise ValueError("Either 'query' or 'pmids' must be not None.")
+    elif query != None:
+        pmids = get_search_results(query, max_results=max_results)
+        
+    # Return publication results
+    handle = Entrez.efetch(db="pubmed", id=pmids, rettype="medline", 
+        retmode="text")
+    time.sleep(1)
+    records = Medline.parse(handle)
+    return records
+    
+        
+def get_publication_batches(query=None, pmids=None, max_results=None, 
+    batch_size=64):
+    
+    """Get PubMed publication record batches for a query or list of ids."""
+
+    # Get search results
+    if query == None and pmids == None:
+        raise ValueError("Either 'query' or 'pmids' must be not None.")
+    elif query != None:
+        pmids = get_search_results(query, max_results=max_results)
+        
+    # Generate publication result batches
+    cursor = 0
+    while cursor < len(pmids):
+        handle = Entrez.efetch(db="pubmed", id=pmids, rettype="medline", 
+            retmode="text", retmax=batch_size, retstart=cursor)
+        time.sleep(1)
+        records = Medline.parse(handle)
+        yield records
+        cursor += batch_size
+
+
+def get_publications_table(records):
+    
+    """Get a pandas table showing the data of a list of publication records as 
+    returned by 'get_publications' or 'get_publication_batches'."""
+
+    keys = ["PMID", "TI", "AU", "AB"]
+    table_records = []
+    for record in records:
+        table_record = [record[k] for k in keys]
+        table_record[2] = "; ".join(table_record[2])
+        table_records.append(table_record)
+    publications_table = pd.DataFrame.from_records(table_records, columns=keys)
+    return publications_table
+
+
+def get_publication_sentences(records, include_title=False):
+    
+    """Get a generator of lists of sentences from a list of publication 
+    records as returned by 'get_publications' or 'get_publication_batches'."""
+
+    for record in records:
+        sentences = []
+        if include_title:
+            sentences += nltk.sent_tokenize(record["TI"])
+        sentences += nltk.sent_tokenize(record["AB"])
+        yield sentences
