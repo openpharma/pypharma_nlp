@@ -31,6 +31,11 @@
         - Datasets
         - Models
 - Understanding Natural Language: Language Models (45 mins)
+    - BERT Introduction (8 mins)
+    - Demo: MaskedLM, Next Sentence Prediction (15 mins)
+    - BioBERT (8 mins)
+    - Demo: MaskedLM, Next Sentence Prediction (15 mins)
+    - Conclusion (5 mins)
 - Categorizing Documents: Document Classification, Automated Tagging (30 mins)
 - Coffee Break (15 mins)
 - Extracting Information I: Named Entity Recognition (30 mins)
