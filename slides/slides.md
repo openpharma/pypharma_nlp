@@ -1,6 +1,6 @@
 % PyPharma NLP Workshop 2019: \
   Introduction to Biomedical NLP
-% Diego Saldana
+% Diego Saldana, Data Scientist at Roche
 % November 2019
 
 
@@ -226,14 +226,14 @@ document generating process as a probabilistic graphical model. We have:
 \end{figure}
 
 
-## Word2Vec (1/3)
+## Word2Vec (1/4)
 
 Word2vec [@word2vec] is a method to produce word embeddings. Word embeddings 
 allow us to project words into a space that has some interesting properties.
 
 * Based on the Skip-gram model proposed by Mikolov in the original paper, which 
   models the probability of a word given the surrounding words (ordering is not 
-  important).
+  important) using a single layer neural network.
 * Words having similar meanings are close to each other, and distant from 
   words having very different meanings.
 * Word arithmetic is possible. For example one may do the operation 
@@ -243,7 +243,7 @@ vec("Madrid") - vec("Spain") + vec("France") \sim vec("Paris")
 $$
 
 
-## Word2Vec (2/3)
+## Word2Vec (2/4)
 
 Word2vec [@word2vec] is a method to produce word embeddings. Word embeddings 
 allow us to project words into a space that has some interesting properties.
@@ -253,7 +253,7 @@ allow us to project words into a space that has some interesting properties.
 \end{figure}
 
 
-## Word2Vec (3/3)
+## Word2Vec (3/4)
 
 Word2vec [@word2vec] is a method to produce word embeddings. Word embeddings 
 allow us to project words into a space that has some interesting properties.
@@ -261,6 +261,91 @@ allow us to project words into a space that has some interesting properties.
 \begin{figure}
 \includegraphics[width=0.6\textwidth]{figures/word2vec_space.png}
 \end{figure}
+
+
+## Word2Vec (4/4)
+
+Word2vec [@word2vec] is a method to produce word embeddings. Word embeddings 
+allow us to project words into a space that has some interesting properties.
+
+* @pyysalo fit a word2vec model on PubMed, PubMec Central, and biomedical 
+  articles in wikipedia and pubblished the resulting biomedical word-embeddings.
+* Biomedical embeddings work better on biomedical tasks due to the domain 
+  specific content being more more similar to the content in which the 
+  algorithms are applied.
+* For example, they have led to better performance when classifying sentences 
+  as containing ADRs or not [@saldana].
+
+
+## GloVe (1/2)
+
+Global Vectors for word representation (GloVe) described by @glove that 
+use a log-bilinear regression model to model word co-occurrences within a 
+context window.
+
+* It was designed to have the attractive properties that enable word arithmetic 
+  operations seen in word2vec.
+* The authors showed that GloVe can outperform word2vec in the word analogy 
+  task.
+* Is also easier to parallelize by virtue of its implementation, allowing it 
+  to be trained in much larger datasets more easily.
+* Like in word2vec, the word vectors obtained with GloVe are fixed and do not 
+  change with context.
+
+
+## GloVe (2/2)
+
+Global Vectors for word representation (GloVe) described by @glove that 
+use a log-bilinear regression model to model word co-occurrences within a 
+context window.
+
+\begin{figure}
+\includegraphics[width=0.7\textwidth]{figures/glove_vs_word2vec.png}
+\end{figure}
+
+
+## ELMO
+
+ELMO is a model based on pre-training of bi-directional language models (LSTMs) 
+to produce context dependent word vectors [@elmo].
+
+\begin{figure}
+\includegraphics[width=0.7\textwidth]{figures/elmo_nn.png}
+\end{figure}
+
+
+## BERT
+
+BERT [@elmo] is a purely attentional model based on bi-directional transformers 
+to produce context dependent word vectors similar to ELMO.
+
+\begin{figure}
+\includegraphics[width=0.7\textwidth]{figures/bert_diagram.png}
+\end{figure}
+
+
+# The State and Outlook of Biomedical NLP
+
+
+## What can we do well?
+
+
+## What can we do less well?
+
+
+## Some Current Topics of Research
+
+
+# Useful Resources
+
+
+## Datasets
+
+
+## Models
+
+
+# Thank you! Q & A
 
 
 ## References
@@ -273,8 +358,8 @@ allow us to project words into a space that has some interesting properties.
 ## Why Biomedical NLP?
 
 * Most of the information out there is in the form of natural language: 
-scientific papers, clinical notes, social media, textbooks, lectures, 
-websites.
+  scientific papers, clinical notes, social media, textbooks, lectures, 
+  websites.
 
 \begin{figure}
 \includegraphics[width=0.7\textwidth]{figures/num_publications_year_cancer.pdf}
@@ -284,12 +369,26 @@ websites.
 ## Why Biomedical NLP?
 
 * Most of the information out there is in the form of natural language: 
-scientific papers, clinical notes, social media, textbooks, lectures, 
-websites.
+  scientific papers, clinical notes, social media, textbooks, lectures, 
+  websites.
 
 \begin{figure}
 \includegraphics[width=0.7\textwidth]{figures/num_publications_year_combined.pdf}
 \end{figure}
+
+
+## GloVe
+
+Global Vectors for word representation (GloVe) described by @glove that 
+use a log-bilinear regression model to model word co-occurrences within a 
+context window.
+
+\begin{figure}
+\includegraphics[width=0.8\textwidth]{figures/glove_equation.png}
+\end{figure}
+
+where $X_ij$ is the number of times word $j$ occurs in the context of word $i$, 
+and $b$ are bias terms.
 
 
 ## Agenda
