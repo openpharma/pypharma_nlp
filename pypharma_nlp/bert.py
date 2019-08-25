@@ -8,10 +8,19 @@ def _get_masked_sentence(tokens, masked_index):
     masked_sentence = ""
     if start > 1:
         masked_sentence += "..."
-    masked_sentence += " ".join(tokens[start:end]).replace(" ##", "")
+    masked_sentence += " ".join(tokens[start:end]).replace(" ##", "").replace(
+        "[SEP]", "")
     if end < len(tokens):
         masked_sentence += "..."
     return masked_sentence
+
+
+def format_text(sentence_1, sentence_2):
+    
+    """Put two sentences into the format expected by BERT."""
+    
+    formatted_text = "[CLS] %s [SEP] %s [SEP]" % (sentence_1, sentence_2)
+    return formatted_text
 
 
 def get_tokenizer():
@@ -86,3 +95,27 @@ def plot_token_probabilities(probabilities, tokens, masked_sentence):
     plt.title("Probability of masked token for the sentence:\n'%s'" % \
         masked_sentence)
     plt.show()
+
+
+def get_next_sentence_probability(sentence_1, sentence_2):
+    
+    """Get the probability of the second sentence following the first one as 
+    predicted by BERT."""
+
+    formatted_text = format_text(sentence_1, sentence_2)
+    tokens, token_ids, segment_ids = get_tokens(formatted_text)
+    tokens_tensor = torch.tensor([token_ids])
+    segments_tensors = torch.tensor([segment_ids])
+    nextSent_model = torch.hub.load("huggingface/pytorch-pretrained-BERT", 
+        "bertForNextSentencePrediction", "bert-base-cased")
+    nextSent_model.eval()
+    
+    # Predict the next sentence classification logits
+    with torch.no_grad():
+        next_sent_classif_logits = nextSent_model(tokens_tensor, 
+            segments_tensors)[0]
+        #probabilities = next_sent_classif_logits
+        probabilities = torch.nn.Softmax(dim=-1)(next_sent_classif_logits).\
+            cpu().numpy()
+    
+    return probabilities
