@@ -11,3 +11,7 @@ boto3==1.9.215
 tqdm==4.34.0
 requests==2.22.0
 regex==2.5.64
+
+# For documentation
+sphinx==2.2.0
+sphinx-rtd-theme==0.4.3
