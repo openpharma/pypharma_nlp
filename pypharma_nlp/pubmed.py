@@ -124,6 +124,7 @@ def get_publication_batches(query=None, pmids=None, max_results=None,
         raise ValueError("Either 'query' or 'pmids' must be not None.")
     elif query != None:
         pmids = get_search_results(query, max_results=max_results)
+    pmids = pmids[:max_results]
         
     # Generate publication result batches
     cursor = 0
