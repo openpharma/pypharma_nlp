@@ -6,6 +6,7 @@ import nltk
 import os
 import pandas as pd
 import time
+import warnings
 
 
 def _set_entrez_email():
@@ -49,7 +50,7 @@ def publications_per_year(query=None, years=None, silent=False):
         # Search pubmed
         query = "%s(\"%d\"[Date - Publication])" % (prefix, year)
         handle = Entrez.esearch(db="pubmed", term=query)
-        time.sleep(1)
+        time.sleep(2)
         record = Entrez.read(handle)
         count = int(record["Count"])
 
@@ -110,7 +111,7 @@ def get_publications(query=None, pmids=None, max_results=None):
     # Return publication results
     handle = Entrez.efetch(db="pubmed", id=pmids, rettype="medline", 
         retmode="text")
-    time.sleep(1)
+    time.sleep(3)
     records = Medline.parse(handle)
     return records
     
@@ -162,6 +163,11 @@ def get_publication_sentences(records, include_title=False, include_pmid=False,
     tokenizer = load('tokenizers/punkt/{0}.pickle'.format(language))
     for record in records:
         text = ""
+        if "PMID" not in record.keys() or \
+            "AB" not in record.keys() or \
+            "TI" not in record.keys():
+            warnings.warn("Malformed record: %s" % str(record))
+            continue
         pmid = record["PMID"]
         if include_title:
             text += record["TI"] + "\n\n"

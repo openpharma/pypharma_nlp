@@ -99,7 +99,8 @@ def _get_labels(sentences, sentence_spans, condition_span_dict):
     return labels
 
 
-def get_classification_examples(data_directory, batch_size=10, max_results=10):
+def get_classification_examples(data_directory, batch_size=200, 
+    max_results=None):
     
     """Get a list of sentences and labels for text classification."""
     
