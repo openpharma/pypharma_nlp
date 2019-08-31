@@ -75,7 +75,7 @@ def _get_span_dict(drug_ae_data):
 
 def _get_labels(sentences, sentence_spans, condition_span_dict):
     pmid = sentences[0]
-    labels = []
+    labels = ["Neg"]
     if pmid in condition_span_dict.keys():
         condition_spans = condition_span_dict[pmid]
         i = 1
@@ -114,4 +114,5 @@ def get_classification_examples(data_directory, batch_size=10, max_results=10):
             include_pmid=True, spans=True)
         for sentences, sentence_spans in documents:
             labels = _get_labels(sentences, sentence_spans, condition_span_dict)
-            yield sentences[1:], labels
+            pmid = sentences[0]
+            yield pmid, sentences[1:], labels[1:]
