@@ -94,8 +94,8 @@ def _get_labels(sentences, sentence_spans, condition_span_dict):
             if j >= len(condition_spans):
                 break
             i += 1
-    if len(labels) < len(sentences) - 1:
-        labels += ["Neg"] * (len(sentences) - len(labels) - 1)
+    if len(labels) < len(sentences):
+        labels += ["Neg"] * (len(sentences) - len(labels))
     return labels
 
 

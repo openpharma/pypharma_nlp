@@ -11,6 +11,6 @@ print("Downloading the ADE Corpus V2")
 download_source_data(DATA_DIRECTORY)
 
 print("Processing the ADE Corpus V2")
-for sentences, labels in get_classification_examples(DATA_DIRECTORY):
+for pmid, sentences, labels in get_classification_examples(DATA_DIRECTORY):
     for i in range(len(sentences)):
         print(sentences[i][:50], labels[i])
