@@ -1,5 +1,6 @@
 from Bio import Entrez
 from Bio import Medline
+from nltk.data import load
 import matplotlib.pyplot as plt
 import nltk
 import os
@@ -152,14 +153,36 @@ def get_publications_table(records):
     return publications_table
 
 
-def get_publication_sentences(records, include_title=False):
+def get_publication_sentences(records, include_title=False, include_pmid=False, 
+    spans=False, language="english"):
     
     """Get a generator of lists of sentences from a list of publication 
     records as returned by 'get_publications' or 'get_publication_batches'."""
 
+    tokenizer = load('tokenizers/punkt/{0}.pickle'.format(language))
     for record in records:
-        sentences = []
+        text = ""
+        pmid = record["PMID"]
         if include_title:
-            sentences += nltk.sent_tokenize(record["TI"])
-        sentences += nltk.sent_tokenize(record["AB"])
-        yield sentences
+            text += record["TI"] + "\n\n"
+        text += record["AB"]
+        offset = 0
+
+        # With span tokenization
+        if spans:
+            tuples = []
+            if include_pmid:
+                tuples += [(pmid, (0, len(pmid)))]
+                offset = 2 + len(pmid)
+            tuples += [(text[b:e], (b + offset,e + offset)) for b, e in 
+                tokenizer.span_tokenize(text)]
+            sentences, spans = zip(*tuples)
+            yield sentences, spans
+            
+        # Without span tokenization
+        else:
+            sentences = []
+            if include_pmid:
+                sentences = [pmid]
+            sentences += tokenizer.tokenize(text)
+            yield sentences
