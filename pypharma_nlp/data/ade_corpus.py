@@ -102,7 +102,7 @@ def _get_labels(sentences, sentence_spans, condition_span_dict):
 def get_classification_examples(data_directory, batch_size=200, 
     max_results=None):
     
-    """Get a list of sentences and labels for text classification."""
+    """Get a ids, sentences and labels for text classification."""
     
     drug_ae_data = read_drug_ae_data(data_directory)
     condition_span_dict = _get_span_dict(drug_ae_data)
