@@ -17,6 +17,9 @@ setup(
         "pandas==0.25.0", 
         "nltk==3.4.5", 
         "wget==3.2", 
+
+        # For tensorflow only
+        "tensorflow", 
         
         # For torch only
         "torch==1.2.0", 
