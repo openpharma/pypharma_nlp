@@ -1,7 +1,7 @@
 from nltk.tokenize.treebank import TreebankWordDetokenizer
 from zipfile import ZipFile
 import os
-import shutil
+import warnings
 import wget
 
 
@@ -11,7 +11,7 @@ def download_source_data(data_directory, overwrite=False):
     https://www.cl.cam.ac.uk/~sb895/HoCCorpus.zip"""
 
     if os.path.isdir(data_directory) and not overwrite:
-        print("Found '%s', skipping. Use 'overwrite=True' if you wish to overwrite a file." % data_directory)
+        warnings.warn("Found '%s', skipping. Use 'overwrite=True' if you wish to overwrite a file." % data_directory)
     else:
         os.makedirs(data_directory, exist_ok=True)
         url = "https://www.cl.cam.ac.uk/~sb895/HoCCorpus.zip"

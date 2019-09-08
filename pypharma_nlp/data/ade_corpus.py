@@ -2,6 +2,7 @@ from pypharma_nlp.pubmed import get_publication_batches
 from pypharma_nlp.pubmed import get_publication_sentences
 import os
 import pandas as pd
+import warnings
 import wget
 
 
@@ -20,7 +21,7 @@ def download_source_data(data_directory, overwrite=False):
         filename = url.split("/")[-1]
         output_path = os.path.join(data_directory, filename)
         if os.path.isfile(output_path) and not overwrite:
-            print("Found '%s', skipping. Use 'overwrite=True' if you wish to overwrite a file." % output_path)
+            warnings.warn("Found '%s', skipping. Use 'overwrite=True' if you wish to overwrite a file." % output_path)
             continue
         wget.download(url, out=output_path)
 
