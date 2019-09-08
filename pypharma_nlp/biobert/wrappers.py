@@ -6,19 +6,13 @@ with warnings.catch_warnings():
     from pypharma_nlp.biobert import modeling
     from pypharma_nlp.biobert import tokenization
     from pypharma_nlp.biobert import classification
-    from pypharma_nlp.biobert import qa
+    from pypharma_nlp.biobert import relation_extraction
+    from pypharma_nlp.biobert import question_answering
     tf = classification.tf
 
 
-CLASSIFICATION_LABELS = {
-    "ade": [
-        "AE",
-        "Neg",
-    ]
-}
-
-
-def _qa_input_fn_builder(features, seq_length, is_training, drop_remainder):
+def _question_anwering_input_fn_builder(features, seq_length, is_training, 
+    drop_remainder):
     all_unique_ids = []
     all_input_ids = []
     all_input_mask = []
@@ -70,6 +64,22 @@ def _qa_input_fn_builder(features, seq_length, is_training, drop_remainder):
     return input_fn
 
 
+CLASSIFICATION_PROCESSORS = {
+    "ade" : classification.AdeProcessor, 
+    "hoc" : classification.HocProcessor, 
+}
+
+
+RELATION_EXTRACTION_PROCESSORS = {
+    "gad": relation_extraction.BioBERTProcessor,
+    "polysearch": relation_extraction.BioBERTProcessor,
+    "mirnadisease": relation_extraction.BioBERTProcessor,
+    "euadr": relation_extraction.BioBERTProcessor,
+    "chemprot": relation_extraction.BioBERTChemprotProcessor,
+    "ddi13": relation_extraction.BioBERTDDIProcessor,
+}
+
+
 class BioBertWrapper(object):
 
     """A wrapper object to encapsulate BioBert's functionality."""
@@ -97,6 +107,7 @@ class BioBertWrapper(object):
         self._tokenizer = None
         self._task_type = None
         self._estimator = None
+        self._task_name = None
         self._labels = None
         self._doc_stride = None
         self._max_query_length = None
@@ -104,11 +115,11 @@ class BioBertWrapper(object):
         self._max_answer_length = None
         self._version_2_with_negative = None
         self._null_score_diff_threshold = None
+        self._model_fn = None
 
     def _build_classification(self, bert_config, init_checkpoint):
         self._do_lower_case = True
         self._max_seq_length = 128
-        self._do_lower_case = True
         self._train_batch_size = 32
         self._eval_batch_size = 8
         self._predict_batch_size = 8
@@ -119,6 +130,8 @@ class BioBertWrapper(object):
         self._iterations_per_loop = 1000
         self._use_tpu = False
         self._num_tpu_cores = 8
+        processor = CLASSIFICATION_PROCESSORS[self._task_name]()
+        self._labels = processor.get_labels()
 
         self._model_fn = classification.model_fn_builder(
             bert_config=bert_config,
@@ -130,10 +143,9 @@ class BioBertWrapper(object):
             use_tpu=self._use_tpu,
             use_one_hot_embeddings=self._use_tpu)
 
-    def _build_qa(self, bert_config, init_checkpoint):
+    def _build_question_answering(self, bert_config, init_checkpoint):
         self._do_lower_case = True
         self._max_seq_length = 384
-        self._do_lower_case = True
         self._train_batch_size = 32
         self._eval_batch_size = 8
         self._predict_batch_size = 8
@@ -149,7 +161,7 @@ class BioBertWrapper(object):
         self._n_best_size = 20
         self._max_answer_length = 30
 
-        self._model_fn = qa.model_fn_builder(
+        self._model_fn = question_answering.model_fn_builder(
             bert_config=bert_config,
             init_checkpoint=init_checkpoint,
             learning_rate=self._learning_rate,
@@ -158,12 +170,39 @@ class BioBertWrapper(object):
             use_tpu=self._use_tpu,
             use_one_hot_embeddings=self._use_tpu)
 
+
+    def _build_relation_extraction(self, bert_config, init_checkpoint):
+        self._do_lower_case = True
+        self._max_seq_length = 128
+        self._train_batch_size = 32
+        self._eval_batch_size = 8
+        self._predict_batch_size = 8
+        self._learning_rate = 5e-5
+        self._num_train_epochs = 3.0
+        self._warmup_proportion = 0.1
+        self._save_checkpoints_steps = 1000
+        self._iterations_per_loop = 1000
+        self._use_tpu = False
+        self._num_tpu_cores = 8
+        processor = RELATION_EXTRACTION_PROCESSORS[self._task_name]()
+        self._labels = processor.get_labels()
+        
+        self._model_fn = relation_extraction.model_fn_builder(
+            bert_config=bert_config,
+            num_labels=len(self._labels),
+            init_checkpoint=init_checkpoint,
+            learning_rate=self._learning_rate,
+            num_train_steps=0,
+            num_warmup_steps=0,
+            use_tpu=self._use_tpu,
+            use_one_hot_embeddings=self._use_tpu)
+
+        
     def build(self, task_type, task_name, model_directory, init_checkpoint, 
         data_dir, output_dir):
         """Setup the wrapper model based on a checkpoint and a task"""
 
         self._task_type = task_type
-        self._labels = CLASSIFICATION_LABELS[task_name]
         vocab_file = os.path.join(model_directory, "vocab.txt")
         bert_config_file = os.path.join(
           model_directory, "bert_config.json")
@@ -182,7 +221,7 @@ class BioBertWrapper(object):
 
         tf.gfile.MakeDirs(output_dir)
 
-        task_name = task_name.lower()
+        self._task_name = task_name.lower()
 
         self._tokenizer = tokenization.FullTokenizer(
             vocab_file=vocab_file, do_lower_case=self._do_lower_case)
@@ -209,8 +248,10 @@ class BioBertWrapper(object):
         if task_type == "classification":
             self._build_classification(
               bert_config, init_checkpoint)
-        elif task_type == "qa":
-            self._build_qa(bert_config, init_checkpoint)
+        elif task_type == "relation_extraction":
+            self._build_relation_extraction(bert_config, init_checkpoint)
+        elif task_type == "question_answering":
+            self._build_question_answering(bert_config, init_checkpoint)
         else:
             raise ValueError("Unknown task type: '%s'." % task_type)
 
@@ -225,27 +266,27 @@ class BioBertWrapper(object):
             predict_batch_size=self._predict_batch_size)
 
     def classify(self, sentences):
-        predict_examples = [classification.InputExample(guid=str(i + 1),
+        examples = [classification.InputExample(guid=str(i + 1),
             text_a=sentences[i], text_b=None, label=self._labels[0]) for i in
             range(len(sentences))]
-        num_actual_predict_examples = len(predict_examples)
+        num_actual_examples = len(examples)
         if self._use_tpu:
             # TPU requires a fixed batch size for all batches, therefore
             # the number of examples must be a multiple of the batch size,
             # or else examples will get dropped. So we pad with fake
             # examples which are ignored later on.
             while len(
-              predict_examples) % self._predict_batch_size != 0:
-                predict_examples.append(PaddingInputExample())
+              examples) % self._predict_batch_size != 0:
+                examples.append(PaddingInputExample())
 
         features = classification.convert_examples_to_features(
-            predict_examples, self._labels, self._max_seq_length,
+            examples, self._labels, self._max_seq_length,
             self._tokenizer)
 
         tf.logging.info("***** Running prediction*****")
         tf.logging.info("    Num examples = %d (%d actual, %d padding)",
-            len(predict_examples), num_actual_predict_examples,
-            len(predict_examples) - num_actual_predict_examples)
+            len(examples), num_actual_examples,
+            len(examples) - num_actual_examples)
         tf.logging.info("    Batch size = %d", self._predict_batch_size)
 
         predict_drop_remainder = True if self._use_tpu else False
@@ -255,10 +296,45 @@ class BioBertWrapper(object):
         result = self._estimator.predict(input_fn=predict_input_fn)
         predictions = np.array([r["probabilities"] for r in result])
         return predictions
+        
+        
+    def extract_relations(self, sentences):
+        examples = [relation_extraction.InputExample(guid=str(i),
+            text_a=sentences[i], text_b=None, label=self._labels[0]) for i in 
+            range(len(sentences))]
+        num_actual_examples = len(examples)
+        if self._use_tpu:
+            # TPU requires a fixed batch size for all batches, therefore
+            # the number of examples must be a multiple of the batch size,
+            # or else examples will get dropped. So we pad with fake
+            # examples which are ignored later on.
+            while len(
+              examples) % self._predict_batch_size != 0:
+                examples.append(PaddingInputExample())
+
+        features = relation_extraction.convert_examples_to_features(
+            examples, self._labels, self._max_seq_length,
+            self._tokenizer)
+
+        tf.logging.info("***** Running prediction*****")
+        tf.logging.info("    Num examples = %d (%d actual, %d padding)",
+            len(examples), num_actual_examples,
+            len(examples) - num_actual_examples)
+        tf.logging.info("    Batch size = %d", self._predict_batch_size)
+
+        predict_drop_remainder = True if self._use_tpu else False
+        predict_input_fn = relation_extraction.input_fn_builder(features,
+            self._max_seq_length, False, predict_drop_remainder)
+
+        result = self._estimator.predict(input_fn=predict_input_fn)
+        predictions = np.array([r["probabilities"] for r in result])
+        return predictions
+
+        
 
     def answer(self, questions, contexts):
         examples = [
-            qa.SquadExample(
+            question_answering.SquadExample(
                 qas_id=str(i),
                 question_text=questions[i],
                 doc_tokens=contexts[i].split(),
@@ -272,7 +348,7 @@ class BioBertWrapper(object):
         def add_feature(feature):
             features.append(feature)
 
-        qa.convert_examples_to_features(
+        question_answering.convert_examples_to_features(
             examples=examples,
             tokenizer=self._tokenizer,
             max_seq_length=self._max_seq_length,
@@ -289,7 +365,7 @@ class BioBertWrapper(object):
         all_results = []
 
         predict_drop_remainder = True if self._use_tpu else False
-        predict_input_fn = _qa_input_fn_builder(features,
+        predict_input_fn = _question_answering_input_fn_builder(features,
             self._max_seq_length, False, predict_drop_remainder)
 
         # If running eval on the TPU, you will need to specify the number of
@@ -305,7 +381,7 @@ class BioBertWrapper(object):
             end_logits = [float(x)
                       for x in result["end_logits"].flat]
             all_results.append(
-                qa.RawResult(
+                question_answering.RawResult(
                     unique_id=unique_id,
                     start_logits=start_logits,
                     end_logits=end_logits))
@@ -317,7 +393,8 @@ class BioBertWrapper(object):
 
     def _decode_predictions(self, all_examples, all_features, all_results):
         
-        example_index_to_features = qa.collections.defaultdict(list)
+        example_index_to_features = question_answering.collections.defaultdict(
+            list)
         for feature in all_features:
             example_index_to_features[feature.example_index].append(feature)
     
@@ -325,13 +402,13 @@ class BioBertWrapper(object):
         for result in all_results:
             unique_id_to_result[result.unique_id] = result
     
-        _PrelimPrediction = qa.collections.namedtuple(
+        _PrelimPrediction = question_answering.collections.namedtuple(
             "PrelimPrediction", ["feature_index", "start_index", "end_index", 
             "start_logit", "end_logit"])
     
-        all_predictions = qa.collections.OrderedDict()
-        all_nbest_json = qa.collections.OrderedDict()
-        scores_diff_json = qa.collections.OrderedDict()
+        all_predictions = question_answering.collections.OrderedDict()
+        all_nbest_json = question_answering.collections.OrderedDict()
+        scores_diff_json = question_answering.collections.OrderedDict()
     
         for (example_index, example) in enumerate(all_examples):
             features = example_index_to_features[example_index]
@@ -345,10 +422,10 @@ class BioBertWrapper(object):
             null_end_logit = 0 # the end logit at the slice with min null score
             for (feature_index, feature) in enumerate(features):
                 result = unique_id_to_result[feature.unique_id]
-                start_indexes = qa._get_best_indexes(result.start_logits, 
-                    self._n_best_size)
-                end_indexes = qa._get_best_indexes(result.end_logits, 
-                    self._n_best_size)
+                start_indexes = question_answering._get_best_indexes(
+                    result.start_logits, self._n_best_size)
+                end_indexes = question_answering._get_best_indexes(
+                    result.end_logits, self._n_best_size)
                 # if we could have irrelevant answers, get the min score of 
                 # irrelevant
                 if self._version_2_with_negative:
@@ -404,7 +481,7 @@ class BioBertWrapper(object):
                 key=lambda x: (x.start_logit + x.end_logit),
                 reverse=True)
     
-            _NbestPrediction = qa.collections.namedtuple(
+            _NbestPrediction = question_answering.collections.namedtuple(
                     "NbestPrediction", ["text", "start_logit", "end_logit"])
     
             seen_predictions = {}
@@ -431,8 +508,8 @@ class BioBertWrapper(object):
                     tok_text = " ".join(tok_text.split())
                     orig_text = " ".join(orig_tokens)
     
-                    final_text = qa.get_final_text(tok_text, orig_text, 
-                        self._do_lower_case)
+                    final_text = question_answering.get_final_text(tok_text, 
+                        orig_text, self._do_lower_case)
                     if final_text in seen_predictions:
                         continue
     
@@ -471,11 +548,11 @@ class BioBertWrapper(object):
                     if entry.text:
                         best_non_null_entry = entry
     
-            probs = qa._compute_softmax(total_scores)
+            probs = question_answering._compute_softmax(total_scores)
     
             nbest_json = []
             for (i, entry) in enumerate(nbest):
-                output = qa.collections.OrderedDict()
+                output = question_answering.collections.OrderedDict()
                 output["text"] = entry.text
                 output["probability"] = probs[i]
                 output["start_logit"] = entry.start_logit
@@ -504,14 +581,22 @@ class BioBertWrapper(object):
 
 if __name__ == "__main__":
     wrapper = BioBertWrapper()
+    wrapper.build("relation_extraction", "chemprot", 
+        "models/biobert_v1.0_pubmed_pmc/", 
+        "checkpoints/biobert_bioasq/model.ckpt-1988", "data/ade_corpus", 
+        "output")
+    print(wrapper.extract_relations(["another example"]))
+
+    wrapper = BioBertWrapper()
     wrapper.build("classification", "ade", "models/biobert_v1.0_pubmed_pmc/", 
         "checkpoints/biobert_bioasq/model.ckpt-1988", "data/ade_corpus", 
         "output")
-    #print(wrapper.classify(["whatever fuck"]))
+    print(wrapper.classify(["another example"]))
 
     
     wrapper = BioBertWrapper()
-    wrapper.build("qa", "ade", "models/biobert_v1.0_pubmed_pmc/", 
+    wrapper.build("question_answering", "ade", 
+        "models/biobert_v1.0_pubmed_pmc/", 
         "checkpoints/biobert_bioasq/model.ckpt-1988", "data/ade_corpus", 
         "output")
     

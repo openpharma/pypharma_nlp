@@ -21,110 +21,107 @@ from __future__ import print_function
 import collections
 import csv
 import os
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = '3'
 import modeling
 import optimization
 import tokenization
 import tensorflow as tf
-from pypharma_nlp.data import ade_corpus
-from pypharma_nlp.data import hallmarks_of_cancer
 
 flags = tf.flags
 
 FLAGS = flags.FLAGS
 
 ## Required parameters
-#flags.DEFINE_string(
-#    "data_dir", None,
-#    "The input data dir. Should contain the .tsv files (or other data files) "
-#    "for the task.")
-#
-#flags.DEFINE_string(
-#    "bert_config_file", None,
-#    "The config json file corresponding to the pre-trained BERT model. "
-#    "This specifies the model architecture.")
-#
-#flags.DEFINE_string("task_name", None, "The name of the task to train.")
-#
-#flags.DEFINE_string("vocab_file", None,
-#                    "The vocabulary file that the BERT model was trained on.")
-#
-#flags.DEFINE_string(
-#    "output_dir", None,
-#    "The output directory where the model checkpoints will be written.")
-#
-### Other parameters
-#
-#flags.DEFINE_string(
-#    "init_checkpoint", None,
-#    "Initial checkpoint (usually from a pre-trained BERT model).")
-#
-#flags.DEFINE_bool(
-#    "do_lower_case", True,
-#    "Whether to lower case the input text. Should be True for uncased "
-#    "models and False for cased models.")
-#
-#flags.DEFINE_integer(
-#    "max_seq_length", 128,
-#    "The maximum total input sequence length after WordPiece tokenization. "
-#    "Sequences longer than this will be truncated, and sequences shorter "
-#    "than this will be padded.")
-#
-#flags.DEFINE_bool("do_train", False, "Whether to run training.")
-#
-#flags.DEFINE_bool("do_eval", False, "Whether to run eval on the dev set.")
-#
-#flags.DEFINE_bool(
-#    "do_predict", False,
-#    "Whether to run the model in inference mode on the test set.")
-#
-#flags.DEFINE_integer("train_batch_size", 32, "Total batch size for training.")
-#
-#flags.DEFINE_integer("eval_batch_size", 8, "Total batch size for eval.")
-#
-#flags.DEFINE_integer("predict_batch_size", 8, "Total batch size for predict.")
-#
-#flags.DEFINE_float("learning_rate", 5e-5, "The initial learning rate for Adam.")
-#
-#flags.DEFINE_float("num_train_epochs", 3.0,
-#                   "Total number of training epochs to perform.")
-#
-#flags.DEFINE_float(
-#    "warmup_proportion", 0.1,
-#    "Proportion of training to perform linear learning rate warmup for. "
-#    "E.g., 0.1 = 10% of training.")
-#
-#flags.DEFINE_integer("save_checkpoints_steps", 1000,
-#                     "How often to save the model checkpoint.")
-#
-#flags.DEFINE_integer("iterations_per_loop", 1000,
-#                     "How many steps to make in each estimator call.")
-#
-#flags.DEFINE_bool("use_tpu", False, "Whether to use TPU or GPU/CPU.")
-#
-#tf.flags.DEFINE_string(
-#    "tpu_name", None,
-#    "The Cloud TPU to use for training. This should be either the name "
-#    "used when creating the Cloud TPU, or a grpc://ip.address.of.tpu:8470 "
-#    "url.")
-#
-#tf.flags.DEFINE_string(
-#    "tpu_zone", None,
-#    "[Optional] GCE zone where the Cloud TPU is located in. If not "
-#    "specified, we will attempt to automatically detect the GCE project from "
-#    "metadata.")
-#
-#tf.flags.DEFINE_string(
-#    "gcp_project", None,
-#    "[Optional] Project name for the Cloud TPU-enabled project. If not "
-#    "specified, we will attempt to automatically detect the GCE project from "
-#    "metadata.")
-#
-#tf.flags.DEFINE_string("master", None, "[Optional] TensorFlow master URL.")
-#
-#flags.DEFINE_integer(
-#    "num_tpu_cores", 8,
-#    "Only used if `use_tpu` is True. Total number of TPU cores to use.")
+flags.DEFINE_string(
+    "data_dir", None,
+    "The input data dir. Should contain the .tsv files (or other data files) "
+    "for the task.")
+
+flags.DEFINE_string(
+    "bert_config_file", None,
+    "The config json file corresponding to the pre-trained BERT model. "
+    "This specifies the model architecture.")
+
+flags.DEFINE_string("task_name", None, "The name of the task to train.")
+
+flags.DEFINE_string("vocab_file", None,
+                    "The vocabulary file that the BERT model was trained on.")
+
+flags.DEFINE_string(
+    "output_dir", None,
+    "The output directory where the model checkpoints will be written.")
+
+## Other parameters
+
+flags.DEFINE_string(
+    "init_checkpoint", None,
+    "Initial checkpoint (usually from a pre-trained BERT model).")
+
+flags.DEFINE_bool(
+    "do_lower_case", True,
+    "Whether to lower case the input text. Should be True for uncased "
+    "models and False for cased models.")
+
+flags.DEFINE_integer(
+    "max_seq_length", 128,
+    "The maximum total input sequence length after WordPiece tokenization. "
+    "Sequences longer than this will be truncated, and sequences shorter "
+    "than this will be padded.")
+
+flags.DEFINE_bool("do_train", False, "Whether to run training.")
+
+flags.DEFINE_bool("do_eval", False, "Whether to run eval on the dev set.")
+
+flags.DEFINE_bool(
+    "do_predict", False,
+    "Whether to run the model in inference mode on the test set.")
+
+flags.DEFINE_integer("train_batch_size", 32, "Total batch size for training.")
+
+flags.DEFINE_integer("eval_batch_size", 8, "Total batch size for eval.")
+
+flags.DEFINE_integer("predict_batch_size", 8, "Total batch size for predict.")
+
+flags.DEFINE_float("learning_rate", 5e-5, "The initial learning rate for Adam.")
+
+flags.DEFINE_float("num_train_epochs", 3.0,
+                   "Total number of training epochs to perform.")
+
+flags.DEFINE_float(
+    "warmup_proportion", 0.1,
+    "Proportion of training to perform linear learning rate warmup for. "
+    "E.g., 0.1 = 10% of training.")
+
+flags.DEFINE_integer("save_checkpoints_steps", 1000,
+                     "How often to save the model checkpoint.")
+
+flags.DEFINE_integer("iterations_per_loop", 1000,
+                     "How many steps to make in each estimator call.")
+
+flags.DEFINE_bool("use_tpu", False, "Whether to use TPU or GPU/CPU.")
+
+tf.flags.DEFINE_string(
+    "tpu_name", None,
+    "The Cloud TPU to use for training. This should be either the name "
+    "used when creating the Cloud TPU, or a grpc://ip.address.of.tpu:8470 "
+    "url.")
+
+tf.flags.DEFINE_string(
+    "tpu_zone", None,
+    "[Optional] GCE zone where the Cloud TPU is located in. If not "
+    "specified, we will attempt to automatically detect the GCE project from "
+    "metadata.")
+
+tf.flags.DEFINE_string(
+    "gcp_project", None,
+    "[Optional] Project name for the Cloud TPU-enabled project. If not "
+    "specified, we will attempt to automatically detect the GCE project from "
+    "metadata.")
+
+tf.flags.DEFINE_string("master", None, "[Optional] TensorFlow master URL.")
+
+flags.DEFINE_integer(
+    "num_tpu_cores", 8,
+    "Only used if `use_tpu` is True. Total number of TPU cores to use.")
 
 
 class InputExample(object):
@@ -335,6 +332,129 @@ class MrpcProcessor(DataProcessor):
           InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
     return examples
 
+class BioBERTProcessor(DataProcessor):
+  """Processor for the BioBERT data set (GLUE version)."""
+
+  def get_train_examples(self, data_dir):
+    """See base class."""
+    return self._create_examples(
+        self._read_tsv(os.path.join(data_dir, "train.tsv")), "train")
+
+  def get_dev_examples(self, data_dir):
+    """See base class."""
+    return self._create_examples(
+        self._read_tsv(os.path.join(data_dir, "dev.tsv")), "dev")
+
+  def get_test_examples(self, data_dir):
+    """See base class."""
+    return self._create_examples(
+        self._read_tsv(os.path.join(data_dir, "test.tsv")), "test")
+
+  def get_labels(self):
+    """See base class."""
+    return ["0", "1"]
+
+  def _create_examples(self, lines, set_type):
+    """Creates examples for the training and dev sets."""
+    examples = []
+    for (i, line) in enumerate(lines):
+      # Only the test set has a header
+      if set_type == "test" and i == 0:
+        continue
+      guid = "%s-%s" % (set_type, i)
+      if set_type == "test":
+        text_a = tokenization.convert_to_unicode(line[1])
+        label = "0"
+      else:
+        text_a = tokenization.convert_to_unicode(line[0])
+        label = tokenization.convert_to_unicode(line[1])
+      examples.append(
+          InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
+    return examples
+
+class BioBERTDDIProcessor(DataProcessor):
+  """Processor for the BioBERT data set (GLUE version)."""
+  def __init__(self):
+      raise NotImplementedError
+
+  def get_train_examples(self, data_dir):
+    """See base class."""
+    return self._create_examples(
+        self._read_tsv(os.path.join(data_dir, "train.tsv")), "train")
+
+  def get_dev_examples(self, data_dir):
+    """See base class."""
+    return self._create_examples(
+        self._read_tsv(os.path.join(data_dir, "dev.tsv")), "dev")
+
+  def get_test_examples(self, data_dir):
+    """See base class."""
+    return self._create_examples(
+        self._read_tsv(os.path.join(data_dir, "test.tsv")), "test")
+
+  def get_labels(self):
+    """See base class."""
+    return ["advise", "mechanism", "int", "false"]
+
+  def _create_examples(self, lines, set_type):
+    """Creates examples for the training and dev sets."""
+    examples = []
+    for (i, line) in enumerate(lines):
+      # Only the test set has a header
+      if set_type == "test" and i == 0:
+        continue
+      guid = "%s-%s" % (set_type, i)
+      if set_type == "test":
+        text_a = tokenization.convert_to_unicode(line[1])
+        label = "false"
+      else:
+        text_a = tokenization.convert_to_unicode(line[0])
+        label = tokenization.convert_to_unicode(line[1])
+      examples.append(
+          InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
+    return examples
+
+
+class BioBERTChemprotProcessor(DataProcessor):
+  """Processor for the BioBERT data set (GLUE version)."""
+
+  def get_train_examples(self, data_dir):
+    """See base class."""
+    return self._create_examples(
+        self._read_tsv(os.path.join(data_dir, "train.tsv")), "train")
+
+  def get_dev_examples(self, data_dir):
+    """See base class."""
+    return self._create_examples(
+        self._read_tsv(os.path.join(data_dir, "dev.tsv")), "dev")
+
+  def get_test_examples(self, data_dir):
+    """See base class."""
+    return self._create_examples(
+        self._read_tsv(os.path.join(data_dir, "test.tsv")), "test")
+
+  def get_labels(self):
+    """See base class."""
+    return ["cpr:3", "cpr:4", "cpr:5", "cpr:6", "cpr:9", "false"]
+
+  def _create_examples(self, lines, set_type):
+    """Creates examples for the training and dev sets."""
+    examples = []
+    for (i, line) in enumerate(lines):
+      # Only the test set has a header
+      if set_type == "test" and i == 0:
+        continue
+      guid = "%s-%s" % (set_type, i)
+      if set_type == "test":
+        text_a = tokenization.convert_to_unicode(line[1])
+        label = "false"
+      else:
+        text_a = tokenization.convert_to_unicode(line[0])
+        label = tokenization.convert_to_unicode(line[1])
+      examples.append(
+          InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
+    return examples
+
 
 class ColaProcessor(DataProcessor):
   """Processor for the CoLA data set (GLUE version)."""
@@ -375,142 +495,6 @@ class ColaProcessor(DataProcessor):
       examples.append(
           InputExample(guid=guid, text_a=text_a, text_b=None, label=label))
     return examples
-
-
-class HocProcessor(DataProcessor):
-  """Processor for the HoC Corpus."""
-  
-  def __init__(self):
-    self._examples = {
-        "train" : [], 
-        "dev" : [], 
-        "test" : [], 
-    }
-    self._build_examples()
-  
-  def _get_random_subset(self):
-    import random
-    random_number = random.uniform(0, 1)
-    if random_number <= 0.7:
-      subset = "train"
-    elif random_number <= 0.85:
-      subset = "dev"
-    else:
-      subset = "test"
-    return subset
-  
-  def _build_examples(self):
-    hallmarks_of_cancer.download_source_data(FLAGS.data_dir)
-    import random
-    random.seed(9999)
-    count = 0
-    for pmid, sentences, labels in \
-        hallmarks_of_cancer.get_classification_examples(FLAGS.data_dir):
-        subset = self._get_random_subset()
-        for i in range(len(sentences)):
-            count += 1
-            guid = "%s-%d" % (pmid, count)
-            text_a = tokenization.convert_to_unicode(sentences[i])
-            if len(labels[i]) == 0:
-                labels[i].append("other")
-            label = tokenization.convert_to_unicode(labels[i][0])
-            example = InputExample(guid=str(count), text_a=text_a, text_b=None, 
-                label=label)
-            self._examples[subset].append(example)
-            
-  def get_train_examples(self, data_dir):
-    """See base class."""
-    return self._examples["train"]
-
-  def get_dev_examples(self, data_dir):
-    """See base class."""
-    return self._examples["dev"]
-
-  def get_test_examples(self, data_dir):
-    """See base class."""
-    return self._examples["test"]
-
-  def get_labels(self):
-    """See base class."""
-    labels = [
-        "other", # dummy class
-        "activating invasion and metastasis", 
-        "avoiding immune destruction", 
-        "cellular energetics", 
-        "enabling replicative immortality", 
-        "evading growth suppressors", 
-        "genomic instability and mutation", 
-        "inducing angiogenesis", 
-        "resisting cell death", 
-        "sustaining proliferative signaling", 
-        "tumor promoting inflammation", 
-    ]
-    return labels
-
-
-class AdeProcessor(DataProcessor):
-  """Processor for the ADE Corpus V2."""
-  
-  def __init__(self):
-    self._examples = {
-        "train" : [], 
-        "dev" : [], 
-        "test" : [], 
-    }
-  
-  def _get_random_subset(self):
-    import random
-    random_number = random.uniform(0, 1)
-    if random_number <= 0.7:
-      subset = "train"
-    elif random_number <= 0.85:
-      subset = "dev"
-    else:
-      subset = "test"
-    return subset
-  
-  def _build_examples(self):
-    ade_corpus.download_source_data(FLAGS.data_dir)
-    import random
-    random.seed(9999)
-    count = 0
-    for pmid, sentences, labels in ade_corpus.get_classification_examples(
-        FLAGS.data_dir):
-        subset = self._get_random_subset()
-        for i in range(len(sentences)):
-            count += 1
-            guid = "%s-%d" % (pmid, count)
-            text_a = tokenization.convert_to_unicode(sentences[i])
-            label = tokenization.convert_to_unicode(labels[i])
-            example = InputExample(guid=str(count), text_a=text_a, text_b=None, 
-                label=label)
-            self._examples[subset].append(example)
-            
-  def get_train_examples(self, data_dir):
-    """See base class."""
-    if len(self._examples["train"]) == 0:
-        self._build_examples()
-    return self._examples["train"]
-
-  def get_dev_examples(self, data_dir):
-    """See base class."""
-    if len(self._examples["dev"]) == 0:
-        self._build_examples()
-    return self._examples["dev"]
-
-  def get_test_examples(self, data_dir):
-    """See base class."""
-    if len(self._examples["test"]) == 0:
-        self._build_examples()
-    return self._examples["test"]
-
-  def get_labels(self):
-    """See base class."""
-    labels = [
-        "Neg", 
-        "AE"
-    ]
-    return labels
 
 
 def convert_single_example(ex_index, example, label_list, max_seq_length,
@@ -596,15 +580,15 @@ def convert_single_example(ex_index, example, label_list, max_seq_length,
   assert len(segment_ids) == max_seq_length
 
   label_id = label_map[example.label]
-  #if ex_index < 5:
-  #  tf.logging.info("*** Example ***")
-  #  tf.logging.info("guid: %s" % (example.guid))
-  #  tf.logging.info("tokens: %s" % " ".join(
-  #      [tokenization.printable_text(x) for x in tokens]))
-  #  tf.logging.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
-  #  tf.logging.info("input_mask: %s" % " ".join([str(x) for x in input_mask]))
-  #  tf.logging.info("segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
-  #  tf.logging.info("label: %s (id = %d)" % (example.label, label_id))
+  if ex_index < 5:
+    tf.logging.info("*** Example ***")
+    tf.logging.info("guid: %s" % (example.guid))
+    tf.logging.info("tokens: %s" % " ".join(
+        [tokenization.printable_text(x) for x in tokens]))
+    tf.logging.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
+    tf.logging.info("input_mask: %s" % " ".join([str(x) for x in input_mask]))
+    tf.logging.info("segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
+    tf.logging.info("label: %s (id = %d)" % (example.label, label_id))
 
   feature = InputFeatures(
       input_ids=input_ids,
@@ -622,8 +606,8 @@ def file_based_convert_examples_to_features(
   writer = tf.python_io.TFRecordWriter(output_file)
 
   for (ex_index, example) in enumerate(examples):
-    #if ex_index % 10000 == 0:
-    #  tf.logging.info("Writing example %d of %d" % (ex_index, len(examples)))
+    if ex_index % 10000 == 0:
+      tf.logging.info("Writing example %d of %d" % (ex_index, len(examples)))
 
     feature = convert_single_example(ex_index, example, label_list,
                                      max_seq_length, tokenizer)
@@ -763,9 +747,9 @@ def model_fn_builder(bert_config, num_labels, init_checkpoint, learning_rate,
   def model_fn(features, labels, mode, params):  # pylint: disable=unused-argument
     """The `model_fn` for TPUEstimator."""
 
-    #tf.logging.info("*** Features ***")
-    #for name in sorted(features.keys()):
-    #  tf.logging.info("  name = %s, shape = %s" % (name, features[name].shape))
+    tf.logging.info("*** Features ***")
+    for name in sorted(features.keys()):
+      tf.logging.info("  name = %s, shape = %s" % (name, features[name].shape))
 
     input_ids = features["input_ids"]
     input_mask = features["input_mask"]
@@ -799,13 +783,13 @@ def model_fn_builder(bert_config, num_labels, init_checkpoint, learning_rate,
       else:
         tf.train.init_from_checkpoint(init_checkpoint, assignment_map)
 
-    #tf.logging.info("**** Trainable Variables ****")
+    tf.logging.info("**** Trainable Variables ****")
     for var in tvars:
       init_string = ""
       if var.name in initialized_variable_names:
         init_string = ", *INIT_FROM_CKPT*"
-      #tf.logging.info("  name = %s, shape = %s%s", var.name, var.shape,
-      #                init_string)
+      tf.logging.info("  name = %s, shape = %s%s", var.name, var.shape,
+                      init_string)
 
     output_spec = None
     if mode == tf.estimator.ModeKeys.TRAIN:
@@ -822,8 +806,8 @@ def model_fn_builder(bert_config, num_labels, init_checkpoint, learning_rate,
 
       def metric_fn(per_example_loss, label_ids, logits, is_real_example):
         predictions = tf.argmax(logits, axis=-1, output_type=tf.int32)
-        accuracy = tf.compat.v1.metrics.accuracy(
-            labels=label_ids, predictions=predictions)
+        accuracy = tf.metrics.accuracy(
+            labels=label_ids, predictions=predictions, weights=is_real_example)
         loss = tf.metrics.mean(values=per_example_loss, weights=is_real_example)
         return {
             "eval_accuracy": accuracy,
@@ -909,8 +893,8 @@ def convert_examples_to_features(examples, label_list, max_seq_length,
 
   features = []
   for (ex_index, example) in enumerate(examples):
-    #if ex_index % 10000 == 0:
-    #  tf.logging.info("Writing example %d of %d" % (ex_index, len(examples)))
+    if ex_index % 10000 == 0:
+      tf.logging.info("Writing example %d of %d" % (ex_index, len(examples)))
 
     feature = convert_single_example(ex_index, example, label_list,
                                      max_seq_length, tokenizer)
@@ -927,8 +911,12 @@ def main(_):
       "mnli": MnliProcessor,
       "mrpc": MrpcProcessor,
       "xnli": XnliProcessor,
-      "ade" : AdeProcessor, 
-      "hoc" : HocProcessor, 
+      "gad": BioBERTProcessor,
+      "polysearch": BioBERTProcessor,
+      "mirnadisease": BioBERTProcessor,
+      "euadr": BioBERTProcessor,
+      "chemprot": BioBERTChemprotProcessor,
+      "ddi13": BioBERTDDIProcessor,
   }
 
   tokenization.validate_case_matches_checkpoint(FLAGS.do_lower_case,
