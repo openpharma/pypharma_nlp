@@ -31,7 +31,7 @@ def _download_drive_file_colab(file_id, destination_path):
 
 def _download_drive_file_manual(file_id, destination_path):
     
-    # Create directory
+    # Request the user to download the file manually
     print("Please download the '%s' file from this URL:\nhttps://drive.google.com/file/d/%s/view?usp=sharing" % (destination_path, file_id))
     print("Place the file in '%s'." % destination_path)
     print("Press Enter when done.")
