@@ -635,7 +635,7 @@ class BioBertWrapper(object):
     def extract_entities(self, sentences):
         
         # Detokenize token lists if needed
-        if type(sentences) == list:
+        if type(sentences[0]) == list:
             detokenizer = TreebankWordDetokenizer()
             sentences = [detokenizer.detokenize(s) for s in sentences]
             
