@@ -32,7 +32,7 @@ def get_ner_examples(data_directory, task_name, subset):
     
     :param data_directory: The directory where the data was extracted.
     :param task_name: The task name. This is usually a subdirectory in the 
-    data directory, e.g. 'BC5CDR'.
+    data directory, e.g. 'BC5CDR-disease'.
     :param subset: The data subset. This is usually the name of file in the 
     task name subdirectory without the .tsv extension, e.g. 'train'.
     """
@@ -41,18 +41,20 @@ def get_ner_examples(data_directory, task_name, subset):
     input_path = os.path.join(data_directory, task_name, subset + ".tsv")
     input_stream = open(input_path, "r")
 
-    # Initialize buffer and iterate over lines
+    # Initialize buffers and iterate over lines
+    sentence_ids, tokens, labels = [], [], []
     sentence_id = 1
-    buffer = []
     for line in input_stream.readlines():
 
-        # New sentence started, yield the buffer
+        # New sentence started, yield the buffers
         if line.strip() == "":
-            yield buffer
+            yield sentence_ids, tokens, labels
+            sentence_ids, tokens, labels = [], [], []
             sentence_id += 1
-            buffer = []
         else:
             token, label = line.strip().split("\t")
-            buffer.append((sentence_id, token, label))
+            sentence_ids.append(sentence_id)
+            tokens.append(token)
+            labels.append(label)
         
     input_stream.close()
