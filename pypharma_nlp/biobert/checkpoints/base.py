@@ -20,7 +20,7 @@ def download_checkpoint(checkpoint_directory, overwrite=False,
     checkpoint_subdirectory = os.path.join(checkpoint_directory, 
         checkpoint)
     if os.path.isdir(checkpoint_subdirectory) and not overwrite:
-        print("Found '%s', set 'overwrite' to True if you wish to overwrite it." % checkpoint_directory)
+        print("Found '%s', set 'overwrite' to True if you wish to overwrite it." % checkpoint_subdirectory)
         return
 
     # Check if checkpoint exists
