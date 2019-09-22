@@ -276,8 +276,7 @@ class BioBertWrapper(object):
             use_one_hot_embeddings=self._use_tpu, 
             max_seq_length=self._max_seq_length)
         
-    def build(self, task_type, task_name, model_directory, init_checkpoint, 
-        data_dir, output_dir):
+    def build(self, task_type, task_name, model_directory, init_checkpoint):
         """Setup the wrapper model based on a checkpoint and a task"""
 
         self._task_type = task_type
@@ -297,8 +296,6 @@ class BioBertWrapper(object):
                 "was only trained up to sequence length %d" %
                 (self._max_seq_length, bert_config.max_position_embeddings))
 
-        tf.gfile.MakeDirs(output_dir)
-
         self._task_name = task_name.lower()
 
         self._tokenizer = tokenization.FullTokenizer(
@@ -314,7 +311,7 @@ class BioBertWrapper(object):
         run_config = tf.contrib.tpu.RunConfig(
             cluster=tpu_cluster_resolver,
             master=self._master,
-            model_dir=output_dir,
+            model_dir=None, 
             save_checkpoints_steps=self._save_checkpoints_steps,
             tpu_config=tf.contrib.tpu.TPUConfig(
                 iterations_per_loop=self._iterations_per_loop,
@@ -679,29 +676,24 @@ if __name__ == "__main__":
     
     wrapper = BioBertWrapper()
     wrapper.build("ner", "ner", "models/biobert_v1.0_pubmed_pmc/", 
-        "checkpoints/biobert_bioasq/model.ckpt-1988", "data/ade_corpus", 
-        "output")
+        "checkpoints/biobert_bioasq/model.ckpt-1988", "output")
     print(wrapper.extract_entities(["another example"]))
-    quit()
     
     wrapper = BioBertWrapper()
     wrapper.build("relation_extraction", "chemprot", 
         "models/biobert_v1.0_pubmed_pmc/", 
-        "checkpoints/biobert_bioasq/model.ckpt-1988", "data/ade_corpus", 
-        "output")
+        "checkpoints/biobert_bioasq/model.ckpt-1988", "output")
     print(wrapper.extract_relations(["another example"]))
 
     wrapper = BioBertWrapper()
     wrapper.build("classification", "ade", "models/biobert_v1.0_pubmed_pmc/", 
-        "checkpoints/biobert_bioasq/model.ckpt-1988", "data/ade_corpus", 
-        "output")
+        "checkpoints/biobert_bioasq/model.ckpt-1988", "output")
     print(wrapper.classify(["another example"]))
     
     wrapper = BioBertWrapper()
     wrapper.build("question_answering", "ade", 
         "models/biobert_v1.0_pubmed_pmc/", 
-        "checkpoints/biobert_bioasq/model.ckpt-1988", "data/ade_corpus", 
-        "output")
+        "checkpoints/biobert_bioasq/model.ckpt-1988", "output")
     
     context = "Border Collies require considerably more daily physical exercise and mental stimulation than many other breeds. The Border Collie is widely considered to be the most intelligent dog breed. The Border Collie ranks 1st in Stanley Coren's The Intelligence of Dogs, being part of the top 10 brightest dogs. Although the primary role of the Border Collie is to herd livestock, the breed is becoming increasingly popular as a companion animal."
     print("CONTEXT:\n\n%s\n" % context)
