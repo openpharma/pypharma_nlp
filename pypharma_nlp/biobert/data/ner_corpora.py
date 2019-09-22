@@ -1,7 +1,6 @@
-from pypharma.drive import download_drive_file
+from pypharma_nlp.drive import download_drive_file
 from zipfile import ZipFile
 import os
-import sys
 
 
 def download_source_data(data_directory, overwrite=False):
