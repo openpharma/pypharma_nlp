@@ -4,7 +4,7 @@ import modeling
 import tensorflow as tf
 import tf_metrics
 import tokenization
-from ner import InputFeatures
+from pypharma_nlp.biobert.ner import InputFeatures
 
 
 def convert_single_example(ex_index, example, label_list, max_seq_length, 
@@ -259,4 +259,3 @@ def model_fn_builder(bert_config, num_labels, init_checkpoint, learning_rate,
             )
         return output_spec
     return model_fn
-

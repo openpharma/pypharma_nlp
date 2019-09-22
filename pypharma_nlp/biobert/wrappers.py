@@ -683,24 +683,24 @@ if __name__ == "__main__":
     
     wrapper = BioBertWrapper()
     wrapper.build("ner", "ner", "models/biobert_v1.0_pubmed_pmc/", 
-        "checkpoints/biobert_bioasq/model.ckpt-1988", "output")
+        "checkpoints/biobert_bioasq/model.ckpt-1988")
     print(wrapper.extract_entities(["another example"]))
     
     wrapper = BioBertWrapper()
     wrapper.build("relation_extraction", "chemprot", 
         "models/biobert_v1.0_pubmed_pmc/", 
-        "checkpoints/biobert_bioasq/model.ckpt-1988", "output")
+        "checkpoints/biobert_bioasq/model.ckpt-1988")
     print(wrapper.extract_relations(["another example"]))
 
     wrapper = BioBertWrapper()
     wrapper.build("classification", "ade", "models/biobert_v1.0_pubmed_pmc/", 
-        "checkpoints/biobert_bioasq/model.ckpt-1988", "output")
+        "checkpoints/biobert_bioasq/model.ckpt-1988")
     print(wrapper.classify(["another example"]))
     
     wrapper = BioBertWrapper()
     wrapper.build("question_answering", "ade", 
         "models/biobert_v1.0_pubmed_pmc/", 
-        "checkpoints/biobert_bioasq/model.ckpt-1988", "output")
+        "checkpoints/biobert_bioasq/model.ckpt-1988")
     
     context = "Border Collies require considerably more daily physical exercise and mental stimulation than many other breeds. The Border Collie is widely considered to be the most intelligent dog breed. The Border Collie ranks 1st in Stanley Coren's The Intelligence of Dogs, being part of the top 10 brightest dogs. Although the primary role of the Border Collie is to herd livestock, the breed is becoming increasingly popular as a companion animal."
     print("CONTEXT:\n\n%s\n" % context)
