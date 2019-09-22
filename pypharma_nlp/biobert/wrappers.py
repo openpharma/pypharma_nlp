@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import warnings
+from nltk.tokenize.treebank import TreebankWordDetokenizer
 with warnings.catch_warnings():
     warnings.simplefilter(action="ignore")
     from pypharma_nlp.biobert import modeling
@@ -632,6 +633,12 @@ class BioBertWrapper(object):
         return all_predictions, all_nbest_json, scores_diff_json
 
     def extract_entities(self, sentences):
+        
+        # Detokenize token lists if needed
+        if type(sentences) == list:
+            detokenizer = TreebankWordDetokenizer()
+            sentences = [detokenizer.detokenize(s) for s in sentences]
+            
         examples = [
             ner.InputExample(
                 i, 
