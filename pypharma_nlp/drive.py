@@ -1,14 +1,5 @@
+import os
 import sys
-
-
-def download_drive_file(file_id, destination_path):
-    
-    """Download a file from google drive."""
-    
-    if "google.colab" in sys.modules:
-        _download_drive_file_colab(file_id, destination_path)
-    else:
-        _download_drive_file_manual(file_id, destination_path)
 
 
 def _download_drive_file_colab(file_id, destination_path):
@@ -36,3 +27,20 @@ def _download_drive_file_manual(file_id, destination_path):
     print("Place the file in '%s'." % destination_path)
     print("Press Enter when done.")
     input()
+
+
+def download_drive_file(file_id, destination_path, overwrite):
+    
+    """Download a file from google drive."""
+    
+    # If file is found and not overwriting, stop
+    if os.path.isfile(destination_path) and not overwrite:
+        print("Found '%s', use overwrite=True if you wish to overwrite it." % \
+            destination_path)
+        return
+    
+    # Download path
+    if "google.colab" in sys.modules:
+        _download_drive_file_colab(file_id, destination_path)
+    else:
+        _download_drive_file_manual(file_id, destination_path)

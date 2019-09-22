@@ -11,7 +11,7 @@ def download_source_data(data_directory, overwrite=False):
     os.makedirs(data_directory, exist_ok=True)
     file_id = "1OletxmPYNkz2ltOr9pyT0b0iBtUWxslh"
     zip_path = os.path.join(data_directory, "NERdata.zip")
-    download_drive_file(file_id, zip_path)
+    download_drive_file(file_id, zip_path, overwrite)
 
     # Unzip the file
     with ZipFile(zip_path, "r") as zf:
