@@ -7,11 +7,16 @@ def download_source_data(data_directory, overwrite=False):
     
     """Downloads the source NER data from Biobert's Google drive account."""
 
+    # If directory exists and not overwriting, stop
+    if os.path.isdir(data_directory) and not overwrite:
+        print("Found '%s', set 'overwrite' to True if you wish to overwrite it." % data_directory)
+        return
+
     # Download BioBERT data
     os.makedirs(data_directory, exist_ok=True)
     file_id = "1OletxmPYNkz2ltOr9pyT0b0iBtUWxslh"
     zip_path = os.path.join(data_directory, "NERdata.zip")
-    download_drive_file(file_id, zip_path, overwrite)
+    download_drive_file(file_id, zip_path)
 
     # Unzip the file
     with ZipFile(zip_path, "r") as zf:
@@ -19,3 +24,35 @@ def download_source_data(data_directory, overwrite=False):
     
     # Remove .zip file
     os.remove(zip_path)
+
+
+def get_ner_examples(data_directory, task_name, subset):
+    
+    """Get ids, tokens and labels for named entity recognition.
+    
+    :param data_directory: The directory where the data was extracted.
+    :param task_name: The task name. This is usually a subdirectory in the 
+    data directory, e.g. 'BC5CDR'.
+    :param subset: The data subset. This is usually the name of file in the 
+    task name subdirectory without the .tsv extension, e.g. 'train'.
+    """
+    
+    # Read the data
+    input_path = os.path.join(data_directory, task_name, subset + ".tsv")
+    input_stream = open(input_path, "r")
+
+    # Initialize buffer and iterate over lines
+    sentence_id = 1
+    buffer = []
+    for line in input_stream.readlines():
+
+        # New sentence started, yield the buffer
+        if line.strip() == "":
+            yield buffer
+            sentence_id += 1
+            buffer = []
+        else:
+            token, label = line.strip().split("\t")
+            buffer.append((sentence_id, token, label))
+        
+    input_stream.close()
