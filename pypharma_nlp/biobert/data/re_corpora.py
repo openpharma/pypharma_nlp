@@ -41,10 +41,13 @@ def get_re_examples(data_directory, task_name, fold, subset):
     # Read the data
     input_path = os.path.join(data_directory, task_name, fold, subset + ".tsv")
     input_stream = open(input_path, "r")
-    sentences, labels = [], []
+    count = 1
+    sentence_ids, sentences, labels = [], [], []
     for line in input_stream.readlines():
         sentence, label = line.strip().split("\t")
+        sentence_ids.append(count)
         sentences.append(sentence)
         labels.append(label)
+        count += 1
     input_stream.close()
-    return sentences, labels
+    return sentence_ids, sentences, labels
