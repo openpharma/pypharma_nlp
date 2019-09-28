@@ -43,8 +43,19 @@ def get_re_examples(data_directory, task_name, fold, subset):
     input_stream = open(input_path, "r")
     count = 1
     sentence_ids, sentences, labels = [], [], []
+
+    # We skip a line on the test data, since it has headers
+    if subset == "test":
+        input_stream.readline()
+        
     for line in input_stream.readlines():
-        sentence, label = line.strip().split("\t")
+
+        # Training and test data have slightly different formats
+        if subset == "train":
+            sentence, label = line.strip().split("\t")
+        elif subset == "test":
+            _, sentence, label = line.strip().split("\t")
+        
         sentence_ids.append(count)
         sentences.append(sentence)
         labels.append(label)
