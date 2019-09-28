@@ -366,8 +366,10 @@ class BioBertWrapper(object):
             self._max_seq_length, False, predict_drop_remainder)
 
         result = self._estimator.predict(input_fn=predict_input_fn)
-        predictions = np.array([r["probabilities"] for r in result])
-        return predictions
+        predicted_probabilities = np.array([r["probabilities"] for r in result])
+        predicted_labels = [self._labels[np.argmax(p)] for p in 
+            predicted_probabilities]
+        return predicted_labels, predicted_probabilities
         
     def extract_relations(self, sentences):
         examples = [relation_extraction.InputExample(guid=str(i),
