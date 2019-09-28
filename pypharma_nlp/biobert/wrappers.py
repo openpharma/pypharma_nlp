@@ -669,13 +669,13 @@ class BioBertWrapper(object):
         for i, prediction in enumerate(result):
             labels = []
             length = len(tokens[i])
-            print(prediction["prediction"], tokens[i], length)
             for id in prediction["prediction"][:length]:
                 if id != 0:
                     label = self._labels[id - 1]
                 else:
                     label = self._labels[2]
                 labels.append(label)
+            prediction["tokens"] = tokens[i]
             prediction["prediction"] = labels
             predictions.append(prediction)
         return predictions
