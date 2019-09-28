@@ -394,8 +394,9 @@ class BioBertWrapper(object):
             self._max_seq_length, False, predict_drop_remainder)
 
         result = self._estimator.predict(input_fn=predict_input_fn)
-        predictions = np.array([r["probabilities"] for r in result])
-        return predictions
+        probabilities = np.array([r["probabilities"] for r in result])
+        predictions = [np.argmax(p) for p in probabilities]
+        return predictions, probabilities
 
     def answer(self, questions, contexts):
         examples = [
