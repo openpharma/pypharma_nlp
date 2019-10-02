@@ -377,7 +377,6 @@ class BioBertWrapper(object):
             text_a=tokenization.convert_to_unicode(sentences[i]), 
             text_b=None, 
             label=tokenization.convert_to_unicode(self._labels[0]), 
-            is_real_example=True
         ) for i in range(len(sentences))]
         num_actual_examples = len(examples)
         if self._use_tpu:
