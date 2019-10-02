@@ -143,7 +143,6 @@ class BioBertWrapper(object):
         tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.FATAL)
         self._do_lower_case = True
         self._max_seq_length = 128
-        self._do_lower_case = True
         self._train_batch_size = 32
         self._eval_batch_size = 8
         self._predict_batch_size = 8
@@ -171,8 +170,9 @@ class BioBertWrapper(object):
         self._null_score_diff_threshold = None
         self._model_fn = None
 
-    def _build_classification(self, bert_config, init_checkpoint):
-        self._do_lower_case = True
+    def _build_classification(self, bert_config, init_checkpoint, 
+        do_lower_case):
+        self._do_lower_case = do_lower_case
         self._max_seq_length = 128
         self._train_batch_size = 32
         self._eval_batch_size = 8
@@ -197,8 +197,9 @@ class BioBertWrapper(object):
             use_tpu=self._use_tpu,
             use_one_hot_embeddings=self._use_tpu)
 
-    def _build_question_answering(self, bert_config, init_checkpoint):
-        self._do_lower_case = True
+    def _build_question_answering(self, bert_config, init_checkpoint, 
+        do_lower_case):
+        self._do_lower_case = do_lower_case
         self._max_seq_length = 384
         self._train_batch_size = 32
         self._eval_batch_size = 8
@@ -224,8 +225,9 @@ class BioBertWrapper(object):
             use_tpu=self._use_tpu,
             use_one_hot_embeddings=self._use_tpu)
 
-    def _build_relation_extraction(self, bert_config, init_checkpoint):
-        self._do_lower_case = True
+    def _build_relation_extraction(self, bert_config, init_checkpoint, 
+        do_lower_case):
+        self._do_lower_case = do_lower_case
         self._max_seq_length = 128
         self._train_batch_size = 32
         self._eval_batch_size = 8
@@ -250,8 +252,8 @@ class BioBertWrapper(object):
             use_tpu=self._use_tpu,
             use_one_hot_embeddings=self._use_tpu)
 
-    def _build_ner(self, bert_config, init_checkpoint):
-        self._do_lower_case = True
+    def _build_ner(self, bert_config, init_checkpoint, do_lower_case):
+        self._do_lower_case = do_lower_case
         self._max_seq_length = 128
         self._train_batch_size = 32
         self._eval_batch_size = 8
@@ -277,9 +279,11 @@ class BioBertWrapper(object):
             use_one_hot_embeddings=self._use_tpu, 
             max_seq_length=self._max_seq_length)
         
-    def build(self, task_type, task_name, model_directory, init_checkpoint):
+    def build(self, task_type, task_name, model_directory, init_checkpoint, 
+        do_lower_case=True):
         """Setup the wrapper model based on a checkpoint and a task"""
 
+        self._do_lower_case = do_lower_case
         self._task_type = task_type
         vocab_file = os.path.join(model_directory, "vocab.txt")
         bert_config_file = os.path.join(
@@ -322,14 +326,16 @@ class BioBertWrapper(object):
         train_examples = None
 
         if task_type == "classification":
-            self._build_classification(
-              bert_config, init_checkpoint)
+            self._build_classification(bert_config, init_checkpoint, 
+                do_lower_case)
         elif task_type == "relation_extraction":
-            self._build_relation_extraction(bert_config, init_checkpoint)
+            self._build_relation_extraction(bert_config, init_checkpoint, 
+                do_lower_case)
         elif task_type == "ner":
-            self._build_ner(bert_config, init_checkpoint)
+            self._build_ner(bert_config, init_checkpoint, do_lower_case)
         elif task_type == "question_answering":
-            self._build_question_answering(bert_config, init_checkpoint)
+            self._build_question_answering(bert_config, init_checkpoint, 
+                do_lower_case)
         else:
             raise ValueError("Unknown task type: '%s'." % task_type)
 
@@ -693,10 +699,11 @@ if __name__ == "__main__":
     #print(wrapper.extract_entities(["another example"]))
     
     wrapper = BioBertWrapper()
-    wrapper.build("relation_extraction", "chemprot", 
+    wrapper.build("relation_extraction", "GAD", 
         "models/biobert_v1.0_pubmed_pmc/", 
-        "checkpoints/biobert_bioasq/model.ckpt-1988")
-    print(wrapper.extract_relations(["another example"]))
+        "checkpoints/biobert_bioasq/model.ckpt-1988", 
+        do_lower_case=False)
+    print(wrapper.extract_relations(["These results suggest that the C1772T polymorphism in @GENE$ is not involved in progression or metastasis of @DISEASE$."]))
 
     quit()
 
