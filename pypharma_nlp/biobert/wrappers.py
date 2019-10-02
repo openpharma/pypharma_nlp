@@ -372,9 +372,13 @@ class BioBertWrapper(object):
         return predicted_labels, predicted_probabilities
         
     def extract_relations(self, sentences):
-        examples = [relation_extraction.InputExample(guid=str(i),
-            text_a=sentences[i], text_b=None, label=self._labels[0]) for i in 
-            range(len(sentences))]
+        examples = [relation_extraction.InputExample(
+            guid=str(i),
+            text_a=tokenization.convert_to_unicode(sentences[i]), 
+            text_b=None, 
+            label=tokenization.convert_to_unicode(self._labels[0]), 
+            is_real_example=True
+        ) for i in range(len(sentences))]
         num_actual_examples = len(examples)
         if self._use_tpu:
             # TPU requires a fixed batch size for all batches, therefore
@@ -684,16 +688,18 @@ class BioBertWrapper(object):
         
 if __name__ == "__main__":
     
-    wrapper = BioBertWrapper()
-    wrapper.build("ner", "ner", "models/biobert_v1.0_pubmed_pmc/", 
-        "checkpoints/biobert_bioasq/model.ckpt-1988")
-    print(wrapper.extract_entities(["another example"]))
+    #wrapper = BioBertWrapper()
+    #wrapper.build("ner", "ner", "models/biobert_v1.0_pubmed_pmc/", 
+    #    "checkpoints/biobert_bioasq/model.ckpt-1988")
+    #print(wrapper.extract_entities(["another example"]))
     
     wrapper = BioBertWrapper()
     wrapper.build("relation_extraction", "chemprot", 
         "models/biobert_v1.0_pubmed_pmc/", 
         "checkpoints/biobert_bioasq/model.ckpt-1988")
     print(wrapper.extract_relations(["another example"]))
+
+    quit()
 
     wrapper = BioBertWrapper()
     wrapper.build("classification", "ade", "models/biobert_v1.0_pubmed_pmc/", 
