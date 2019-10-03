@@ -53,7 +53,7 @@ def get_qa_examples(data_directory, subset, task):
         for qa in item["qas"]:
             id = qa["id"]
             question = qa["question"]
-            current_ids += [id] * len(qa["id"])
+            current_ids += [id] * len(qa["answers"])
             current_questions += [question] * len(qa["answers"])
             current_answers += [a["text"] for a in qa["answers"]]
         ids += current_ids
