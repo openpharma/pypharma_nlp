@@ -14,3 +14,4 @@ print("Processing the BioASQ")
 ids, contexts, questions, answers = get_qa_examples(DATA_DIRECTORY, "train", 
     "6b")
 print(ids, contexts, questions, answers)
+print(len(ids), len(contexts), len(questions), len(answers))
