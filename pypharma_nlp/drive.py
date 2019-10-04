@@ -14,7 +14,7 @@ def _download_drive_file_colab(file_id, destination_path):
     drive = GoogleDrive(gauth)
     
     # Download TAR
-    print ("Downloading tar file")
+    print ("Downloading file from Google Drive")
     myzip = drive.CreateFile({ "id" : file_id })
     myzip.GetContentFile(destination_path)
 
