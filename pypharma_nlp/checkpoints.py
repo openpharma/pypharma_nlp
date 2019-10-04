@@ -33,7 +33,7 @@ def download_checkpoint(checkpoint_directory, checkpoint,
     zip_path = os.path.join(checkpoint_directory, "%s.zip" % checkpoint)
     download_drive_file(file_id, zip_path)
 
-    # Untar the file
+    # Unzip the file
     with ZipFile.open(zip_path, "r") as zf:
         zf.extractall(checkpoint_directory)
     
