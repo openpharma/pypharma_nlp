@@ -6,6 +6,7 @@ from zipfile import ZipFile
 CHECKPOINT_ID_DICT = {
     "classification" : "15JNbxQG1ffnLQ3tZlLoVjaRcGljcVLZ1", 
     "ner" : "1LVUSPaniDpecVUpYmDeFCKXWSXK_WsQH", 
+    "squad" : "1y935dhvU4h54M8QXdDJ4XaNVibVha9So", 
 }
 
 
