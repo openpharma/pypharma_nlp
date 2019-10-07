@@ -4,9 +4,11 @@ from zipfile import ZipFile
 
 
 CHECKPOINT_ID_DICT = {
-    "classification" : "15JNbxQG1ffnLQ3tZlLoVjaRcGljcVLZ1", 
-    "ner" : "1LVUSPaniDpecVUpYmDeFCKXWSXK_WsQH", 
-    "squad" : "1y935dhvU4h54M8QXdDJ4XaNVibVha9So", 
+    "biobert_v1.1_pubmed_classification_ade" : "1awtztljFfKDaBG06VZgBQ6MwqmrtlsAv", 
+    "biobert_v1.1_pubmed_ner_bc5cdr_disease" : "1_5Zqkj5ZLUOKUKEHFh8C18DSOTghwvph", 
+    "biobert_v1.1_pubmed_qa_bioasq" : "13xPx35UPOQ5U7ObKikajqINGWtV35uU3", 
+    "biobert_v1.1_pubmed_qa_squad" : "1F7_oMwY1bZSuUU6MGZuSj-Fz7Q5ovskD", 
+    "biobert_v1.1_pubmed_re_gad" : "1K2p3dL62xzwOsmUIchjuqRgWOJklrRI9", 
 }
 
 
