@@ -11,6 +11,11 @@ print("Downloading the ADE Corpus V2")
 download_source_data(DATA_DIRECTORY)
 
 print("Processing the ADE Corpus V2")
+counts = {}
 for pmid, sentences, labels in get_classification_examples(DATA_DIRECTORY):
     for i in range(len(sentences)):
-        print(sentences[i][:50], labels[i])
+        if labels[i] not in counts.keys():
+            counts[labels[i]] = 0
+        counts[labels[i]] += 1
+
+print(counts)
