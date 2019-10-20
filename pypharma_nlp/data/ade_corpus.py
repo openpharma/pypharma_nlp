@@ -71,6 +71,8 @@ def _get_span_dict(drug_ae_data):
         if pmid not in condition_span_dict.keys():
             condition_span_dict[pmid] = []
         condition_span_dict[pmid].append(condition_span)
+    for pmid in condition_span_dict.keys():
+        condition_span_dict[pmid] = sorted(condition_span_dict[pmid])
     return condition_span_dict
 
 
@@ -82,25 +84,35 @@ def _get_labels(sentences, sentence_spans, condition_span_dict):
         i = 1
         j = 0
         condition_span = condition_spans[j]
-        while i < len(sentence_spans):
-            while sentence_spans[i][1] < condition_span[0]:
+        while True:
+            while sentence_spans[i][1] <= condition_span[0]:
                 labels.append("Neg")
                 i += 1
-            labels.append("AE")
-            while condition_span[1] <= sentence_spans[i][0]:
+                if i >= len(sentence_spans):
+                    break
+            if sentence_spans[i][0] <= condition_span[0] and \
+                sentence_spans[i][1] >= condition_span[1]:
+                labels.append("AE")
+                j += 1
+                i += 1
+                if j >= len(condition_spans) or i >= len(sentence_spans):
+                    break
+                condition_span = condition_spans[j]
+            else:
+                raise ValueError("Condition span not in sentence span.")
+            while sentence_spans[i][0] >= condition_span[1]:
                 j += 1
                 if j >= len(condition_spans):
                     break
                 condition_span = condition_spans[j]
             if j >= len(condition_spans):
                 break
-            i += 1
     if len(labels) < len(sentences):
         labels += ["Neg"] * (len(sentences) - len(labels))
     return labels
 
 
-def get_classification_examples(data_directory, batch_size=200, 
+def get_classification_examples(data_directory, batch_size=10000, 
     max_results=None):
     
     """Get a ids, sentences and labels for text classification."""
