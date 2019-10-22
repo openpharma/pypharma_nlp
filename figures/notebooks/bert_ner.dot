@@ -1,0 +1,75 @@
+//Palette: https://www.color-hex.com/color-palette/83647
+
+digraph G {
+    
+    //Inputs
+    text [
+        label="Abstract"
+        shape="rectangle"
+        color=None
+        style=filled
+        fillcolor="#fb7452"
+    ];
+    
+    // BERT model
+    subgraph cluster_0 {
+        label="BERT Model";
+        color=None;
+        bgcolor="#fdd35f";
+        newrank=true;
+        enc [
+            label="Encoder"
+            shape="rectangle"
+            color=None
+            style=filled
+            fillcolor=white
+        ];
+        rank=same;
+    }
+    text -> enc;
+
+    // Outputs
+    pool [
+        label="Pooled Output ([CLS])"
+        shape="rectangle"
+        color=None
+        style=filled
+        fillcolor="#b8c791"
+    ];
+    enc -> pool;
+    out [
+        label="Sequence Outputs"
+        shape="rectangle"
+        color=None
+        style=filled
+        fillcolor="#b8c791"
+    ];
+    enc -> out;
+    y_hat [
+        label="y_i_hat\nP(y_i=[B,I,O]|sent,weights)"
+        shape="rectangle"
+        color=None
+        style=filled
+        fillcolor="#55a576"
+    ];
+    out -> y_hat;
+    y [
+        label="y_i\nTrue Labels"
+        shape="rectangle"
+        color=None
+        style=filled
+        fillcolor="#55a576"
+    ];
+
+    // Loss
+    loss [
+        label="Cross-Entropy Loss"
+        shape="rectangle"
+        color=None
+        style=filled
+        fillcolor="#4e635a"
+        fontcolor=white
+    ];
+    y_hat -> loss;
+    y -> loss;
+}
