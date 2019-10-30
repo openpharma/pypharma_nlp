@@ -457,13 +457,14 @@ class AdeProcessor(DataProcessor):
         "dev" : [], 
         "test" : [], 
     }
+    self._build_examples()
   
   def _get_random_subset(self):
     import random
     random_number = random.uniform(0, 1)
-    if random_number <= 0.7:
+    if random_number <= 0.9:
       subset = "train"
-    elif random_number <= 0.85:
+    elif random_number <= 0.9:
       subset = "dev"
     else:
       subset = "test"
@@ -474,34 +475,36 @@ class AdeProcessor(DataProcessor):
     import random
     random.seed(9999)
     count = 0
+    example_tuples = {}
     for pmid, sentences, labels in ade_corpus.get_classification_examples(
         FLAGS.data_dir):
-        subset = self._get_random_subset()
         for i in range(len(sentences)):
             count += 1
             guid = "%s-%d" % (pmid, count)
             text_a = tokenization.convert_to_unicode(sentences[i])
             label = tokenization.convert_to_unicode(labels[i])
-            example = InputExample(guid=str(count), text_a=text_a, text_b=None, 
-                label=label)
-            self._examples[subset].append(example)
+            example_tuple = (pmid, text_a, label)
+            if pmid not in example_tuples.keys():
+                example_tuples[pmid] = []
+            example_tuples[pmid].append(example_tuple)
+    pmids = sorted(example_tuples.keys())
+    for pmid in pmids:
+        for example_tuple in example_tuples[pmid]:
+            subset = self._get_random_subset()
+            input_example = InputExample(guid=example_tuple[0], 
+                text_a=example_tuple[1], text_b=None, label=example_tuple[2])
+            self._examples[subset].append(input_example)
             
   def get_train_examples(self, data_dir):
     """See base class."""
-    if len(self._examples["train"]) == 0:
-        self._build_examples()
     return self._examples["train"]
 
   def get_dev_examples(self, data_dir):
     """See base class."""
-    if len(self._examples["dev"]) == 0:
-        self._build_examples()
     return self._examples["dev"]
 
   def get_test_examples(self, data_dir):
     """See base class."""
-    if len(self._examples["test"]) == 0:
-        self._build_examples()
     return self._examples["test"]
 
   def get_labels(self):
