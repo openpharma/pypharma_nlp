@@ -457,7 +457,6 @@ class AdeProcessor(DataProcessor):
         "dev" : [], 
         "test" : [], 
     }
-    self._build_examples()
   
   def _get_random_subset(self):
     import random
@@ -497,14 +496,20 @@ class AdeProcessor(DataProcessor):
             
   def get_train_examples(self, data_dir):
     """See base class."""
+    if len(self._examples["train"]) == 0:
+        self._build_examples()
     return self._examples["train"]
 
   def get_dev_examples(self, data_dir):
     """See base class."""
+    if len(self._examples["dev"]) == 0:
+        self._build_examples()
     return self._examples["dev"]
 
   def get_test_examples(self, data_dir):
     """See base class."""
+    if len(self._examples["test"]) == 0:
+        self._build_examples()
     return self._examples["test"]
 
   def get_labels(self):
