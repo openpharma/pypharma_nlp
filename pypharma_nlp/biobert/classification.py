@@ -464,7 +464,7 @@ class AdeProcessor(DataProcessor):
     random_number = random.uniform(0, 1)
     if random_number <= 0.9:
       subset = "train"
-    elif random_number <= 0.9:
+    elif random_number <= 1.0:
       subset = "dev"
     else:
       subset = "test"
