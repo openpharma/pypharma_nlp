@@ -1,27 +1,11 @@
-# Using the notebooks with jupyter and virtualenv
+# PyPharma NLP 2019 Workshop
 
-Create a virtual environment and install the package:
+This is a repository for the PyPharma NLP 2019 Workshop that took place in 
+Basel. We use Google Colab, so a Google/Gmail account is needed to run the 
+notebooks.
 
-```
-virtualenv -p python3 virtualenv
-source venv/bin/activate
-pip install -r requirements
-pip install -e .
-```
+# Google Colab notebooks
 
-If desired, you can create a jupyter kernel for the virtual 
-environment:
-
-```
-pip install jupyter ipykernel
-ipython kernel install --user --name=pypharma_nlp
-```
-
-And then start the jupyter notebook:
-
-```
-jupyter notebook
-```
-
-And choose the 'pypharma\_nlp' kernel. The notebooks can be found in 
-the 'notebooks' folder.
+* Classification: https://colab.research.google.com/drive/1CsHpRWAwQFrTxyoGrZ6eMrS6CSGexPF-
+* Named Entity Recognition and Relation Extraction: https://colab.research.google.com/drive/1uSERVc6sxGhItqNAMep0TO77ij4Xl9YO
+* Question Answering: https://colab.research.google.com/drive/1pS-Ux781lR79eBCEV3YWK8cSbgZzG0cH
