@@ -4,10 +4,20 @@
 % November 2019
 
 
-# Why Biomedical NLP?
+# PyPharma NLP Workshop
+
+- The objective is to introduce the audience to recent progress in biomedical 
+  natural language processing.
+- In particular, we will focus on self-attention based models: BioBERT.
+- Familiarize the audience with BioBERT and the tasks that can be performed: 
+  Classification, Named Entity Recognition, Relation Extraction, 
+  Question Answering.
+- We will emphasize practical use of available open source tools as a gateway 
+  towards deeper understanding through further reading on the topic by 
+  attendees.
 
 
-## The Information Flood (1/3)
+# The Information Flood (1/3)
 
 * Most of the information out there is in the form of natural language: 
 scientific papers, clinical notes, social media, textbooks, lectures, 
@@ -18,7 +28,7 @@ websites.
 \end{figure}
 
 
-## The Information Flood (2/3)
+# The Information Flood (2/3)
 
 * Most of the information out there is in the form of natural language: 
 scientific papers, clinical notes, social media, textbooks, lectures, 
@@ -29,7 +39,7 @@ websites.
 \end{figure}
 
 
-## The Information Flood (3/3)
+# The Information Flood (3/3)
 
 * Most of the information out there is in the form of natural language: 
 scientific papers, clinical notes, social media, textbooks, lectures, 
@@ -43,28 +53,7 @@ usually limited and chosen by the extractors.
 * How can machines help?
 
 
-## Humans vs. Machines (1/2)
-
-* Machines and humans have different strengths and weaknesses when processing 
-text.
-
-\begin{figure}
-\includegraphics[height=0.7\textheight]{figures/ade_corpus_iaa.png}
-\end{figure}
-
-
-## Humans vs. Machines (2/2)
-
-* Machines and humans have different strengths and weaknesses when processing 
-text.
-* Machines in particular are capable of processing vast amounts of text in a 
-very short period of time in a very consistent way and performing simple 
-tasks.
-* Humans are take much more time to process text and are less consistent, 
-however they are capable of much more complex reasoning and understanding.
-
-
-## Humans vs. Machines (3/2)
+# Humans vs. Machines (1/2)
 
 What are some examples of tasks can computers perform well in 2019?
 
@@ -78,10 +67,31 @@ PubMed abstracts)
 "Which drug should be used as an antidote in benzodiazepine overdose?")
 
 
+# Humans vs. Machines (2/2)
+
+* Machines and humans have different strengths and weaknesses when processing 
+text.
+
+\begin{figure}
+\includegraphics[height=0.7\textheight]{figures/ade_corpus_iaa.png}
+\end{figure}
+
+
+# Humans vs. Machines (3/2)
+
+* Machines and humans have different strengths and weaknesses when processing 
+text.
+* Machines in particular are capable of processing vast amounts of text in a 
+very short period of time in a very consistent way and performing simple 
+tasks.
+* Humans are take much more time to process text and are less consistent, 
+however they are capable of much more complex reasoning and understanding.
+
+
 # Some Natural Language Processing Tasks
 
 
-## Language Modelling
+# Language Modelling
 
 A language model assigns probabilities to sequences of tokens, where tokens 
 $t$ can be words, characters, sub-words, etc: 
@@ -99,7 +109,7 @@ Clearly, each subsequent sentence is less probable than the next. A good
 language model should assign probabilities to these sentences accordingly.
 
 
-## Document Classification (1/2)
+# Document Classification (1/2)
 
 A document classifier assigns one or more class labels to a document.
 
@@ -111,7 +121,7 @@ Examples of document classification include:
 not.
 
 
-## Document Classification (2/2)
+# Document Classification (2/2)
 
 A document classifier assigns one or more class labels to a document.
 
@@ -120,7 +130,7 @@ A document classifier assigns one or more class labels to a document.
 \end{figure}
 
 
-## Named Entity Recognition
+# Named Entity Recognition
 
 A Named Entity Recognizer extracts entities from a document. 
 
@@ -132,7 +142,7 @@ the start and the end of the entity mention in the text.
 extracted entity to a concept in a standardized vocabulary.
 
 
-## Relation Extraction
+# Relation Extraction
 
 A Relation Extractor extracts two or more entities and a relationship between 
 them. Examples of potential relations to extract include:
@@ -144,7 +154,7 @@ them. Examples of potential relations to extract include:
 * A protein interacting with another protein.
 * etc
 
-## Question Answering
+# Question Answering
 
 A Question Answering system provides an answer to a question given some 
 context. That is, a set of documents. An example question would be:
@@ -157,9 +167,23 @@ context. That is, a set of documents. An example question would be:
 --------------------------------------
 
 
+# Question Answering
+
+\begin{figure}
+\includegraphics[width=0.9\textwidth]{figures/qa_cord_19_1.png}
+\end{figure}
+
+
+# Question Answering
+
+\begin{figure}
+\includegraphics[width=0.99\textwidth]{figures/qa_cord_19_2.png}
+\end{figure}
+
+
 # Some Highlights in the History of NLP
 
-## Bag-Of-Words models
+# Bag-Of-Words models
 
 Bag-Of-Words (BOW) models ignore context and ordering of the words in a 
 sentence and model them as an unordered collection of words [@bow].
@@ -177,7 +201,7 @@ columns.
 -------------------------------------------------------
 
 
-## Latent Semantic Analysis
+# Latent Semantic Analysis
 
 Applying Singular Value Decomposition to a Word-Document-Matrix is referred to 
 as Latent Semantic Analysis [@lsa].
@@ -191,13 +215,8 @@ as Latent Semantic Analysis [@lsa].
 * An early method for distributional semantics.
 * It's also a form of dimensionality reduction.
 
--------------------------------------------------------
-\textbf{Sentence:} The dog was barking at the other dog. 
-\textbf{BOW representation:} dog: 2, bark: 1, other: 1, all other words: 0
--------------------------------------------------------
 
-
-## Latent Dirichlet Allocation (1/2)
+# Latent Dirichlet Allocation (1/2)
 
 Latent Dirichlet Allocation [@lda] is a bayesian approach that models the 
 document generating process as a probabilistic graphical model. We have:
@@ -212,7 +231,7 @@ document generating process as a probabilistic graphical model. We have:
 \end{figure}
 
 
-## Latent Dirichlet Allocation (2/2)
+# Latent Dirichlet Allocation (2/2)
 
 Latent Dirichlet Allocation [@lda] is a bayesian approach that models the 
 document generating process as a probabilistic graphical model. We have:
@@ -226,7 +245,7 @@ document generating process as a probabilistic graphical model. We have:
 \end{figure}
 
 
-## Word2Vec (1/4)
+# Word2Vec (1/4)
 
 Word2vec [@word2vec] is a method to produce word embeddings. Word embeddings 
 allow us to project words into a space that has some interesting properties.
@@ -243,7 +262,7 @@ vec("Madrid") - vec("Spain") + vec("France") \sim vec("Paris")
 $$
 
 
-## Word2Vec (2/4)
+# Word2Vec (2/4)
 
 Word2vec [@word2vec] is a method to produce word embeddings. Word embeddings 
 allow us to project words into a space that has some interesting properties.
@@ -253,7 +272,7 @@ allow us to project words into a space that has some interesting properties.
 \end{figure}
 
 
-## Word2Vec (3/4)
+# Word2Vec (3/4)
 
 Word2vec [@word2vec] is a method to produce word embeddings. Word embeddings 
 allow us to project words into a space that has some interesting properties.
@@ -263,7 +282,7 @@ allow us to project words into a space that has some interesting properties.
 \end{figure}
 
 
-## Word2Vec (4/4)
+# Word2Vec (4/4)
 
 Word2vec [@word2vec] is a method to produce word embeddings. Word embeddings 
 allow us to project words into a space that has some interesting properties.
@@ -277,7 +296,7 @@ allow us to project words into a space that has some interesting properties.
   as containing ADRs or not [@saldana].
 
 
-## GloVe (1/2)
+# GloVe (1/2)
 
 Global Vectors for word representation (GloVe) described by @glove that 
 use a log-bilinear regression model to model word co-occurrences within a 
@@ -293,7 +312,7 @@ context window.
   change with context.
 
 
-## GloVe (2/2)
+# GloVe (2/2)
 
 Global Vectors for word representation (GloVe) described by @glove that 
 use a log-bilinear regression model to model word co-occurrences within a 
@@ -304,7 +323,7 @@ context window.
 \end{figure}
 
 
-## ELMO
+# ELMO
 
 ELMO is a model based on pre-training of bi-directional language models (LSTMs) 
 to produce context dependent word vectors [@elmo].
@@ -314,7 +333,7 @@ to produce context dependent word vectors [@elmo].
 \end{figure}
 
 
-## BERT
+# BERT
 
 BERT [@elmo] is a purely attentional model based on bi-directional transformers 
 to produce context dependent word vectors similar to ELMO.
@@ -324,79 +343,72 @@ to produce context dependent word vectors similar to ELMO.
 \end{figure}
 
 
-# The State and Outlook of Biomedical NLP
+# The Transformer Architecture
+
+What follows is from: http://jalammar.github.io/illustrated-transformer/
 
 
-## What can we do well?
-
-
-## What can we do less well?
-
-
-## Some Current Topics of Research
-
-
-# Useful Resources
-
-
-## Datasets
-
-
-## Models
-
-
-# Thank you! Q & A
-
-
-## References
-
-<div id="refs"></div>
-
-
-# Backup
-
-## Why Biomedical NLP?
-
-* Most of the information out there is in the form of natural language: 
-  scientific papers, clinical notes, social media, textbooks, lectures, 
-  websites.
+# The Transformer Architecture
 
 \begin{figure}
-\includegraphics[width=0.7\textwidth]{figures/num_publications_year_cancer.pdf}
+\includegraphics[width=0.9\textwidth]{figures/transformer_architecture/transformer_architecture.png}
 \end{figure}
 
 
-## Why Biomedical NLP?
-
-* Most of the information out there is in the form of natural language: 
-  scientific papers, clinical notes, social media, textbooks, lectures, 
-  websites.
+# Embedding + Positional Embedding (1/2)
 
 \begin{figure}
-\includegraphics[width=0.7\textwidth]{figures/num_publications_year_combined.pdf}
+\includegraphics[width=0.9\textwidth]{figures/transformer_architecture/positional_embedding.png}
 \end{figure}
 
 
-## GloVe
-
-Global Vectors for word representation (GloVe) described by @glove that 
-use a log-bilinear regression model to model word co-occurrences within a 
-context window.
+# Embedding + Positional Embedding (2/2)
 
 \begin{figure}
-\includegraphics[width=0.8\textwidth]{figures/glove_equation.png}
+\includegraphics[width=0.5\textwidth]{figures/transformer_architecture/sinusoids.png}
 \end{figure}
 
-where $X_ij$ is the number of times word $j$ occurs in the context of word $i$, 
-and $b$ are bias terms.
+
+# Queries, Keys, and Values
+
+\begin{figure}
+\includegraphics[width=0.9\textwidth]{figures/transformer_architecture/QKV.png}
+\end{figure}
 
 
-## Agenda
+# Self-attention
 
-* Biomedical NLP 101: Bags of words (30 mins)
-* Deep Learning for Biomedical NLP (30 mins)
-* Language Modelling (30 mins)
-* Text Classification (30 mins)
-* Named Entity Recognition (30 mins)
-* Question Answering (30 mins)
-* Integrating NLP into survival models (30 mins)
+\begin{figure}
+\includegraphics[width=0.9\textwidth]{figures/transformer_architecture/self_attention.png}
+\end{figure}
+
+
+# Multi-head self-attention
+
+\begin{figure}
+\includegraphics[width=0.9\textwidth]{figures/transformer_architecture/multihead_attention.png}
+\end{figure}
+
+
+# Concatenation
+
+\begin{figure}
+\includegraphics[width=0.9\textwidth]{figures/transformer_architecture/concatenation.png}
+\end{figure}
+
+
+# Overview
+
+\begin{figure}
+\includegraphics[width=0.9\textwidth]{figures/transformer_architecture/global.png}
+\end{figure}
+
+
+# BERT Training
+
+\begin{figure}
+\includegraphics[width=0.9\textwidth]{figures/transformer_architecture/bert_tasks.png}
+\end{figure}
+
+
+# References

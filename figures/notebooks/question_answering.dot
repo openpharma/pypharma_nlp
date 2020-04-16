@@ -1,0 +1,19 @@
+digraph {
+
+    question [label = "Question", shape = "note"];
+    context [label = "Context", shape = "note"];
+    qa [label = "Question\nAnswering\nModel", shape = "diamond"];
+    
+    question -> qa;
+    context -> qa;
+    
+    answer_1 [label = "Answer 1", shape = "ellipse"];
+    answer_2 [label = "Answer 2", shape = "ellipse"];
+    answer_e [label = "...", shape = "ellipse"];
+    answer_n [label = "Answer N", shape = "ellipse"];
+
+    qa -> answer_1 [label = "Score 1"];
+    qa -> answer_2 [label = "Score 2"];
+    qa -> answer_e [label = "..."];
+    qa -> answer_n [label = "Score N"];
+}

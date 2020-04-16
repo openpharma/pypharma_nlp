@@ -1,0 +1,21 @@
+digraph {
+
+    document [label = "Case Report", shape = "note"];
+    sentence_1 [label = "Sentence 1", shape = "rectangle"];
+    sentence_2 [label = "Sentence 2", shape = "rectangle"];
+    sentence_e [label = "...", shape = "rectangle"];
+    sentence_n [label = "Sentence N", shape = "rectangle"];
+
+    document -> sentence_1;
+    document -> sentence_2;
+    document -> sentence_e;
+    document -> sentence_n;
+    
+    classifier [label = "Text\nClassifier", shape = "diamond"];
+    ade [label = "Adverse Drug\nEvent", shape = "ellipse"];
+    neg [label = "Negative", shape = "ellipse"];
+
+    sentence_1 -> classifier;
+    classifier -> ade [label = "0.8"];
+    classifier -> neg [label = "0.2"];
+}

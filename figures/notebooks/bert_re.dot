@@ -16,17 +16,41 @@ digraph G {
         label="BERT Model";
         color=None;
         bgcolor="#fdd35f";
-        newrank=true;
-        enc [
-            label="Encoder"
+        //newrank=true;
+        transformer_layer_1 [
+            label="Transformer Layer 1"
             shape="rectangle"
             color=None
             style=filled
             fillcolor=white
         ];
-        rank=same;
+        transformer_layer_2 [
+            label="Transformer Layer 2"
+            shape="rectangle"
+            color=None
+            style=filled
+            fillcolor=white
+        ];
+        transformer_layer_e [
+            label="..."
+            shape="rectangle"
+            color=None
+            style=filled
+            fillcolor=white
+        ];
+        transformer_layer_12 [
+            label="Transformer Layer 12"
+            shape="rectangle"
+            color=None
+            style=filled
+            fillcolor=white
+        ];
+        //rank=same;
     }
-    text -> enc;
+    text -> transformer_layer_1;
+    transformer_layer_1 -> transformer_layer_2;
+    transformer_layer_2 -> transformer_layer_e;
+    transformer_layer_e -> transformer_layer_12;
 
     // Outputs
     pool [
@@ -36,7 +60,7 @@ digraph G {
         style=filled
         fillcolor="#b8c791"
     ];
-    enc -> pool;
+    transformer_layer_12 -> pool;
     out [
         label="Sequence Outputs"
         shape="rectangle"
@@ -44,7 +68,7 @@ digraph G {
         style=filled
         fillcolor="#b8c791"
     ];
-    enc -> out;
+    transformer_layer_12 -> out;
     y_hat [
         label="y_hat\nP(y=[GAD,Neg]|sent,weights)"
         shape="rectangle"
