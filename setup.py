@@ -25,7 +25,7 @@ setup(
         "torch==1.2.0", 
         "boto3==1.9.215", 
         "tqdm==4.34.0", 
-        "requests==2.22.0", 
+        "requests==2.31.0", 
         "regex==2019.8.19", 
         
         # For documentation
